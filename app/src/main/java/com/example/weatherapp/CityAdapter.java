@@ -51,6 +51,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
         //readCursorData(cityItem,holder);
         holder.imageView.setImageResource(cityItem.getImageResource());
         holder.cityName.setText(cityItem.getCityName());
+        holder.tempValue.setText(Math.round(cityItem.getTemp())+"°C");
         if(position == 0)
         {
             holder.favButton.setVisibility(View.INVISIBLE);
@@ -103,7 +104,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageView;
-        TextView cityName;
+        TextView cityName,tempValue;
         Button favButton;
 
         public ViewHolder(@NonNull View itemView) {
@@ -111,6 +112,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
             imageView = itemView.findViewById(R.id.imageView);
             cityName = itemView.findViewById(R.id.titleTextView);
             favButton = itemView.findViewById(R.id.favoriteButton);
+            tempValue = itemView.findViewById(R.id.temp_value);
 
             favButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -121,7 +123,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
                     if(cityItem.getFavStatus().equals("0"))
                     {
                         cityItem.setFavStatus("1");
-                        cityItem.setKey_id(favCityDB.insertIntoTheDatabase(cityItem.getCityName()));
+                        cityItem.setKey_id(favCityDB.insertIntoTheDatabase(cityItem.getCityName(),cityItem.getTemp()));
                         favButton.setBackgroundResource(R.drawable.ic_baseline_yellow_24);
                     }
                     else {

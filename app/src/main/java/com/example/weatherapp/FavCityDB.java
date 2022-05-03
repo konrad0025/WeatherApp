@@ -19,6 +19,7 @@ public class FavCityDB extends SQLiteOpenHelper {
     private static String TABLE_NAME = "city";
     public static String KEY_ID = "id";
     public static String CITY_NAME = "cityName";
+    public static String TEMP_C = "tempC";
 
     public FavCityDB(Context context)
     {
@@ -28,7 +29,7 @@ public class FavCityDB extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + "("
-                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + CITY_NAME + " TEXT)");
+                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + CITY_NAME + " TEXT," + TEMP_C + " TEXT)");
     }
 
     @Override
@@ -36,11 +37,12 @@ public class FavCityDB extends SQLiteOpenHelper {
 
     }
 
-    public int insertIntoTheDatabase(String cityName)
+    public int insertIntoTheDatabase(String cityName, double temp)
     {
         SQLiteDatabase db=this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(CITY_NAME, cityName);
+        cv.put(TEMP_C, temp);
         long id = db.insert(TABLE_NAME,null,cv);
         Log.d("FavCityDB Status", cityName + ", status - " + cv);
         return (int)id;
@@ -56,6 +58,7 @@ public class FavCityDB extends SQLiteOpenHelper {
         Cursor cursor = readAllData();
         final int cityNameID = cursor.getColumnIndex(CITY_NAME);
         final int cityID = cursor.getColumnIndex(KEY_ID);
+        final int tempID = cursor.getColumnIndex(TEMP_C);
         final ArrayList<CityItem> cityList = new ArrayList<>();
         if(!cursor.moveToFirst())
         {
@@ -64,8 +67,9 @@ public class FavCityDB extends SQLiteOpenHelper {
         do{
             final String name = cursor.getString(cityNameID);
             final String cityIdValue = cursor.getString(cityID);
-            Log.d("checking", name + " " + cityIdValue);
-            cityList.add(new CityItem(Integer.parseInt(cityIdValue),R.drawable.cloud,name,"1"));
+            final String tempIdValue = cursor.getString(tempID);
+            Log.d("checking", name + " " + cityIdValue + " " + tempIdValue);
+            cityList.add(new CityItem(Integer.parseInt(cityIdValue),R.drawable.cloud,name,"1",Double.parseDouble(tempIdValue)));
         }while(cursor.moveToNext());
         return cityList;
     }

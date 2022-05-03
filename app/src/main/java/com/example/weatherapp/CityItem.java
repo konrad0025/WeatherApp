@@ -5,15 +5,17 @@ public class CityItem {
     private int imageResource;
     private String cityName;
     private String favStatus;
+    private double temp;
 
     public CityItem() {
     }
 
-    public CityItem(int key_id, int imageResource, String cityName, String favStatus) {
+    public CityItem(int key_id, int imageResource, String cityName, String favStatus, double temp) {
         this.key_id = key_id;
         this.imageResource = imageResource;
         this.cityName = cityName;
         this.favStatus = favStatus;
+        this.temp = temp;
     }
 
     public int getKey_id() {
@@ -47,4 +49,8 @@ public class CityItem {
     public void setCityName(String cityName) {
         this.cityName = cityName;
     }
+
+    public double getTemp() { return temp; }
+
+    public void setTemp(double temp) { this.temp = temp; }
 }

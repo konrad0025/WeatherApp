@@ -8,10 +8,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -21,13 +33,15 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
     private FavCityDB favCityDB = new FavCityDB(this);
     private FloatingActionButton addButton;
     private CityAdapter cityAdapter;
+    private String url = "http://api.openweathermap.org/data/2.5/weather";
+    private String appId = "4419cc9da0b7cb02657dd65732f95dbb";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         cityItems = favCityDB.getCityList();
-        cityItems.add(0,new CityItem(0,R.drawable.partlycouldy,"Your Location","0"));
+        cityItems.add(0,new CityItem(0,R.drawable.partlycouldy,"Your Location","0",15.0));
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         cityAdapter = new CityAdapter(cityItems,this);
@@ -42,7 +56,6 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
         });
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
         itemTouchHelper.attachToRecyclerView(findViewById(R.id.recyclerView));
-
     }
 
     ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -70,6 +83,40 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
 
     @Override
     public void applyTexts(String cityName) {
-        cityItems.add(new CityItem(cityItems.size(),R.drawable.cloud,cityName,"0"));
+        getWeatherDetailsOfNewCity(cityName);
+    }
+
+    public void getWeatherDetailsOfNewCity(String cityName)
+    {
+        String tempUrl = "";
+        tempUrl = url + "?q=" + cityName + "&appid=" + appId;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, tempUrl, new Response.Listener<String>() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onResponse(String response) {
+                Log.d("response",response);
+                try {
+                    JSONObject jsonResponse = new JSONObject(response);
+                    JSONArray jsonArray = jsonResponse.getJSONArray("weather");
+                    JSONObject jsonObjectWeather = jsonArray.getJSONObject(0);
+                    String description = jsonObjectWeather.getString("description");
+                    JSONObject jsonObjectMain = jsonResponse.getJSONObject("main");
+                    double temp = jsonObjectMain.getDouble("temp") - 273.15;
+                    cityItems.add(new CityItem(cityItems.size(),R.drawable.cloud,cityName,"0", temp));
+                    cityAdapter.notifyDataSetChanged();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.toString().trim(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        requestQueue.add(stringRequest);
     }
 }
