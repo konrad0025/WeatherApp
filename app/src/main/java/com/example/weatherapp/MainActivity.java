@@ -5,13 +5,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AddNewCityDialog.CityDialogListener {
 
     private ArrayList<CityItem> cityItems = new ArrayList<>();
     private FavCityDB favCityDB = new FavCityDB(this);
+    private FloatingActionButton addButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +28,23 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(new CityAdapter(cityItems,this));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        addButton = findViewById(R.id.addButton);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openDialog();
+            }
+        });
 
-        //cityItems.add(favCityDB.getCityList().get(0));
+    }
+
+    private void openDialog() {
+        AddNewCityDialog addNewCityDialog = new AddNewCityDialog();
+        addNewCityDialog.show(getSupportFragmentManager(),"example dialog");
+    }
+
+    @Override
+    public void applyTexts(String cityName) {
+        cityItems.add(new CityItem(cityItems.size() + 1,R.drawable.cloud,cityName,"0"));
     }
 }

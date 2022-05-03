@@ -112,7 +112,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
                     if(cityItem.getFavStatus().equals("0"))
                     {
                         cityItem.setFavStatus("1");
-                        favCityDB.insertIntoTheDatabase(cityItem.getCityName());
+                        cityItem.setKey_id(favCityDB.insertIntoTheDatabase(cityItem.getCityName()));
                         favButton.setBackgroundResource(R.drawable.ic_baseline_yellow_24);
                     }
                     else {
