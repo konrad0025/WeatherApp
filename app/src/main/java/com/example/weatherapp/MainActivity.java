@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
         });
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
         itemTouchHelper.attachToRecyclerView(findViewById(R.id.recyclerView));
-        LocalDateTime prev = loadDataTime();
+        String prev = loadDataTime();
         if(prev.toString().equals(""))
         {
             saveDataTime();
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
         else
         {
             LocalDateTime now = LocalDateTime.now();
-            Duration duration = Duration.between(prev, now);
+            Duration duration = Duration.between(LocalDateTime.parse(prev), now);
             Log.d("MINUTES",duration.toMinutes()+"");
             if(duration.toMinutes() >= 30)
             {
@@ -191,9 +191,9 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
         editor.commit();
     }
 
-    public LocalDateTime loadDataTime()
+    public String loadDataTime()
     {
         SharedPreferences sharedpreferences = getSharedPreferences("lastUpdate", Context.MODE_PRIVATE);
-        return LocalDateTime.parse(sharedpreferences.getString("Time",""));
+        return sharedpreferences.getString("Time","");
     }
 }
