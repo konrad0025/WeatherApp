@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
             createTableOnFirstStart();
         }*/
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item,parent,false);
+
         return new ViewHolder(view);
     }
 
@@ -88,7 +90,10 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
             }
             db.close();
         }*/
+
     }
+
+
 
     @Override
     public int getItemCount() {
@@ -128,6 +133,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
                     }
                 }
             });
+
         }
     }
 }
