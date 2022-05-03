@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
         setContentView(R.layout.activity_main);
 
         cityItems = favCityDB.getCityList();
+        cityItems.add(0,new CityItem(0,R.drawable.partlycouldy,"Your Location","0"));
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(new CityAdapter(cityItems,this));
@@ -45,6 +46,6 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
 
     @Override
     public void applyTexts(String cityName) {
-        cityItems.add(new CityItem(cityItems.size() + 1,R.drawable.cloud,cityName,"0"));
+        cityItems.add(new CityItem(cityItems.size(),R.drawable.cloud,cityName,"0"));
     }
 }

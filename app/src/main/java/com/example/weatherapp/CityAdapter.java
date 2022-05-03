@@ -49,6 +49,10 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
         //readCursorData(cityItem,holder);
         holder.imageView.setImageResource(cityItem.getImageResource());
         holder.cityName.setText(cityItem.getCityName());
+        if(position == 0)
+        {
+            holder.favButton.setVisibility(View.INVISIBLE);
+        }
         if(cityItem.getFavStatus().equals("1"))
         {
             holder.favButton.setBackgroundResource(R.drawable.ic_baseline_yellow_24);
