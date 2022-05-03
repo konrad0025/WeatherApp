@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -25,6 +27,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements AddNewCityDialog.CityDialogListener {
@@ -56,6 +60,23 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
         });
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
         itemTouchHelper.attachToRecyclerView(findViewById(R.id.recyclerView));
+        LocalDateTime prev = loadDataTime();
+        if(prev.toString().equals(""))
+        {
+            saveDataTime();
+        }
+        else
+        {
+            LocalDateTime now = LocalDateTime.now();
+            Duration duration = Duration.between(prev, now);
+            Log.d("MINUTES",duration.toMinutes()+"");
+            if(duration.toMinutes() >= 30)
+            {
+                updateWeatherDetails();
+                saveDataTime();
+            }
+
+        }
     }
 
     ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -118,5 +139,61 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
         });
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         requestQueue.add(stringRequest);
+        Log.d("helollo","/n/n/n/dasdasdasd");
+        saveDataTime();
+        Log.d("helollo","/n/n/n/dasdasdasd");
+        Log.d("helollo",loadDataTime().toString());
+    }
+    private int i;
+    @SuppressLint("NotifyDataSetChanged")
+    public void updateWeatherDetails()
+    {
+        for (i = 1; i<cityItems.size();i++) {
+                String tempUrl = "";
+                tempUrl = url + "?q=" + cityItems.get(i).getCityName() + "&appid=" + appId;
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, tempUrl, new Response.Listener<String>() {
+                    final int j = i;
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("response",response);
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            JSONArray jsonArray = jsonResponse.getJSONArray("weather");
+                            JSONObject jsonObjectWeather = jsonArray.getJSONObject(0);
+                            String description = jsonObjectWeather.getString("description");
+                            JSONObject jsonObjectMain = jsonResponse.getJSONObject("main");
+                            double temp = jsonObjectMain.getDouble("temp") - 273.15;
+                            cityItems.get(j).setTemp(temp);
+                            Log.d("hello",cityItems.get(j).getCityName()+" "+cityItems.get(j).getTemp()+" "+j);
+                            cityAdapter.notifyDataSetChanged();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), error.toString().trim(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+                RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+                requestQueue.add(stringRequest);
+        }
+    }
+    public void saveDataTime()
+    {
+        SharedPreferences sharedpreferences = getSharedPreferences("lastUpdate", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        LocalDateTime now = LocalDateTime.now();
+        Log.d("time",now.toString());
+        editor.putString("Time",now.toString());
+        editor.commit();
+    }
+
+    public LocalDateTime loadDataTime()
+    {
+        SharedPreferences sharedpreferences = getSharedPreferences("lastUpdate", Context.MODE_PRIVATE);
+        return LocalDateTime.parse(sharedpreferences.getString("Time",""));
     }
 }
