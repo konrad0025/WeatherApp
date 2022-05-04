@@ -14,13 +14,42 @@
         android:paddingBottom="?attr/actionBarSize"
         android:clipToPadding="false"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addButton"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        app:srcCompat="@drawable/ic_baseline_add_24"
         android:layout_marginEnd="12dp"
-        android:layout_marginBottom="12dp"/>
+        android:layout_marginBottom="12dp">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/menuButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:srcCompat="@drawable/ic_baseline_add_24"
+            tools:ignore="MissingConstraints" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/menuButton"
+            app:srcCompat="@drawable/ic_baseline_place_24"
+            tools:ignore="MissingConstraints" />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/tempButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/addButton"
+            app:srcCompat="@drawable/ic_baseline_device_thermostat_24"
+            tools:ignore="MissingConstraints" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
 
 </FrameLayout>

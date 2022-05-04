@@ -22,11 +22,13 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
     private ArrayList<CityItem> cityItems;
     private Context context;
     private FavCityDB favCityDB;
+    private boolean isCelcius;
 
-    public CityAdapter(ArrayList<CityItem> cityItems, Context context)
+    public CityAdapter(ArrayList<CityItem> cityItems, Context context, boolean isCelcius)
     {
         this.cityItems = cityItems;
         this.context = context;
+        this.isCelcius = isCelcius;
     }
 
     @NonNull
@@ -51,7 +53,8 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
         //readCursorData(cityItem,holder);
         holder.imageView.setImageResource(cityItem.getImageResource());
         holder.cityName.setText(cityItem.getCityName());
-        holder.tempValue.setText(Math.round(cityItem.getTemp())+"°C");
+        holder.tempValue.setText(getTempeture(cityItem.getTemp()));
+        holder.favButton.setVisibility(View.VISIBLE);
         if(position == 0)
         {
             holder.favButton.setVisibility(View.INVISIBLE);
@@ -64,7 +67,6 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
         {
             holder.favButton.setBackgroundResource(R.drawable.ic_baseline_shadow_24);
         }
-
     }
 
     private void readCursorData(CityItem cityItem, ViewHolder viewHolder) {
@@ -136,6 +138,25 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
                 }
             });
 
+        }
+    }
+    public boolean getIsCelcius() {
+        return isCelcius;
+    }
+
+    public void setIsCelcius(boolean celcius) {
+        isCelcius = celcius;
+    }
+
+    private String getTempeture(double tempInC)
+    {
+        if(isCelcius)
+        {
+            return Math.round(tempInC)+"°C";
+        }
+        else
+        {
+            return Math.round(tempInC*9/5+32)+"°F";
         }
     }
 }

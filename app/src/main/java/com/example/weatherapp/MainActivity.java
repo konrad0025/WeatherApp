@@ -12,6 +12,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -35,33 +37,75 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
 
     private ArrayList<CityItem> cityItems = new ArrayList<>();
     private FavCityDB favCityDB = new FavCityDB(this);
-    private FloatingActionButton addButton;
+    private FloatingActionButton addButton,menuButton,tempButton;
+    private Animation rotateClose,rotateOpen,toBottom,fromBottom;
     private CityAdapter cityAdapter;
     private String url = "http://api.openweathermap.org/data/2.5/weather";
     private String appId = "4419cc9da0b7cb02657dd65732f95dbb";
+    private boolean isMenuButtonClicked = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        rotateClose = AnimationUtils.loadAnimation(this,R.anim.rotate_close_anim);
+        rotateOpen = AnimationUtils.loadAnimation(this,R.anim.rotate_open_anim);
+        toBottom = AnimationUtils.loadAnimation(this,R.anim.to_bottom_anim);
+        fromBottom = AnimationUtils.loadAnimation(this,R.anim.from_bottom_anim);
+
         cityItems = favCityDB.getCityList();
         cityItems.add(0,new CityItem(0,R.drawable.partlycouldy,"Your Location","0",15.0));
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
-        cityAdapter = new CityAdapter(cityItems,this);
+        cityAdapter = new CityAdapter(cityItems,this, loadTempType());
         recyclerView.setAdapter(cityAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         addButton = findViewById(R.id.addButton);
+        menuButton = findViewById(R.id.menuButton);
+        tempButton = findViewById(R.id.tempButton);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openDialog();
             }
         });
+        tempButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveTempType(!cityAdapter.getIsCelcius());
+                cityAdapter.setIsCelcius(!cityAdapter.getIsCelcius());
+                cityAdapter.notifyDataSetChanged();
+            }
+        });
+        menuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(isMenuButtonClicked)
+                {
+                    isMenuButtonClicked = false;
+                    menuButton.startAnimation(rotateClose);
+                    tempButton.startAnimation(toBottom);
+                    addButton.startAnimation(toBottom);
+                    tempButton.setVisibility(View.INVISIBLE);
+                    menuButton.setVisibility(View.INVISIBLE);
+                }
+                else
+                {
+                    isMenuButtonClicked = true;
+                    tempButton.setVisibility(View.VISIBLE);
+                    menuButton.setVisibility(View.VISIBLE);
+                    menuButton.startAnimation(rotateOpen);
+                    tempButton.startAnimation(fromBottom);
+                    addButton.startAnimation(fromBottom);
+
+
+                }
+            }
+        });
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
         itemTouchHelper.attachToRecyclerView(findViewById(R.id.recyclerView));
         String prev = loadDataTime();
-        if(prev.toString().equals(""))
+        if(prev.equals(""))
         {
             saveDataTime();
         }
@@ -195,5 +239,19 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
     {
         SharedPreferences sharedpreferences = getSharedPreferences("lastUpdate", Context.MODE_PRIVATE);
         return sharedpreferences.getString("Time","");
+    }
+
+    public void saveTempType(boolean type)
+    {
+        SharedPreferences sharedpreferences = getSharedPreferences("lastUpdate", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putBoolean("temp",type);
+        editor.commit();
+    }
+
+    public boolean loadTempType()
+    {
+        SharedPreferences sharedpreferences = getSharedPreferences("lastUpdate", Context.MODE_PRIVATE);
+        return sharedpreferences.getBoolean("temp",true);
     }
 }
