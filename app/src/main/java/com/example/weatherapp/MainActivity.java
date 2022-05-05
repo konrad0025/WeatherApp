@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
     private String url = "http://api.openweathermap.org/data/2.5/weather";
     private String appId = "4419cc9da0b7cb02657dd65732f95dbb";
     private boolean isMenuButtonClicked = false;
+    private SwipeRefreshLayout swipeRefreshLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,6 +125,26 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
             }
 
         }
+        swipeRefreshLayout = findViewById(R.id.refreshSwipe);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                String prev = loadDataTime();
+                LocalDateTime now = LocalDateTime.now();
+                Duration duration = Duration.between(LocalDateTime.parse(prev), now);
+                Log.d("MINUTES",duration.toMinutes()+"");
+                if(duration.toMinutes() >= 1)
+                {
+                    updateWeatherDetails();
+                    saveDataTime();
+                }
+                else
+                {
+                    Toast.makeText(MainActivity.this,"You have to wait minute until next refresh",Toast.LENGTH_SHORT).show();
+                }
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
