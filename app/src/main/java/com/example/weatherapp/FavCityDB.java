@@ -37,12 +37,16 @@ public class FavCityDB extends SQLiteOpenHelper {
 
     }
 
-    public int insertIntoTheDatabase(String cityName, double temp)
+    public int insertIntoTheDatabase(String cityName, double temp,boolean isFisrtUse)
     {
         SQLiteDatabase db=this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(CITY_NAME, cityName);
         cv.put(TEMP_C, temp);
+        if(isFisrtUse)
+        {
+            cv.put(KEY_ID,0);
+        }
         long id = db.insert(TABLE_NAME,null,cv);
         Log.d("FavCityDB Status", cityName + ", status - " + cv);
         return (int)id;
