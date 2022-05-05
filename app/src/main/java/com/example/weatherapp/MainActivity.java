@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.location.Location;
+import android.location.LocationListener;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -33,7 +35,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements AddNewCityDialog.CityDialogListener {
+public class MainActivity extends AppCompatActivity implements AddNewCityDialog.CityDialogListener, LocationListener {
 
     private ArrayList<CityItem> cityItems = new ArrayList<>();
     private FavCityDB favCityDB = new FavCityDB(this);
@@ -210,6 +212,10 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
                             cityItems.get(j).setTemp(temp);
                             Log.d("hello",cityItems.get(j).getCityName()+" "+cityItems.get(j).getTemp()+" "+j);
                             cityAdapter.notifyDataSetChanged();
+                            if(cityItems.get(j).getFavStatus().equals("1"))
+                            {
+                                favCityDB.updateCity(cityItems.get(j));
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -253,5 +259,10 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
     {
         SharedPreferences sharedpreferences = getSharedPreferences("lastUpdate", Context.MODE_PRIVATE);
         return sharedpreferences.getBoolean("temp",true);
+    }
+
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
+
     }
 }

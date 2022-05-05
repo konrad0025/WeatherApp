@@ -79,6 +79,16 @@ public class FavCityDB extends SQLiteOpenHelper {
         return db.rawQuery(sql,null,null);
     }
 
+    public void updateCity(CityItem cityItem)
+    {
+        SQLiteDatabase db=this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(CITY_NAME, cityItem.getCityName());
+        cv.put(TEMP_C, cityItem.getTemp());
+        db.update(TABLE_NAME, cv, "id = ?", new String[]{cityItem.getKey_id()+""});
+        Log.d("FavCityDB Status", cityItem.getCityName() + ", status - " + cv);
+    }
+
     public void removeFromTheDatabase(int id)
     {
         SQLiteDatabase db = this.getWritableDatabase();
