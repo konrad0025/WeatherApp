@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +14,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -58,18 +60,19 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
     private boolean isMenuButtonClicked = false;
     private SwipeRefreshLayout swipeRefreshLayout;
     private FusedLocationProviderClient fusedLocationProviderClient;
+    private CityAdapter.RecyclerViewClickListener listener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{
                     Manifest.permission.ACCESS_FINE_LOCATION
             }, 100);
         }
+
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         rotateClose = AnimationUtils.loadAnimation(this, R.anim.rotate_close_anim);
         rotateOpen = AnimationUtils.loadAnimation(this, R.anim.rotate_open_anim);
@@ -77,10 +80,10 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
         fromBottom = AnimationUtils.loadAnimation(this, R.anim.from_bottom_anim);
 
         cityItems = favCityDB.getCityList();
-
+        setOnClickListner();
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
-        cityAdapter = new CityAdapter(cityItems, this, loadTempType());
+        cityAdapter = new CityAdapter(cityItems, this, loadTempType(), listener);
         recyclerView.setAdapter(cityAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -163,6 +166,17 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
         });
     }
 
+    private void setOnClickListner() {
+        listener = new CityAdapter.RecyclerViewClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Intent intent = new Intent(MainActivity.this,WeatherDetails.class);
+                intent.putExtra("POSITION",position);
+                startActivity(intent);
+            }
+        };
+    }
+
     ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -178,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
             }
             cityAdapter.notifyDataSetChanged();
         }
+
     };
 
     private void openDialog() {

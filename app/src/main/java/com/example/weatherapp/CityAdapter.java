@@ -1,6 +1,7 @@
 package com.example.weatherapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -8,10 +9,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,12 +31,15 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
     private Context context;
     private FavCityDB favCityDB;
     private boolean isCelcius;
+    private FragmentManager fragmentManager;
+    private RecyclerViewClickListener listener;
 
-    public CityAdapter(ArrayList<CityItem> cityItems, Context context, boolean isCelcius)
+    public CityAdapter(ArrayList<CityItem> cityItems, Context context, boolean isCelcius, RecyclerViewClickListener listener)
     {
         this.cityItems = cityItems;
         this.context = context;
         this.isCelcius = isCelcius;
+        this.listener = listener;
     }
 
     @NonNull
@@ -49,7 +60,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull CityAdapter.ViewHolder holder, int position) {
         final CityItem cityItem = cityItems.get(position);
-        
+
         //readCursorData(cityItem,holder);
         holder.imageView.setImageResource(cityItem.getImageResource());
         holder.cityName.setText(cityItem.getCityName());
@@ -103,11 +114,13 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
         return cityItems.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         ImageView imageView;
         TextView cityName,tempValue;
         Button favButton;
+        FragmentManager f = fragmentManager;
+        ConstraintLayout constraintLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -115,7 +128,8 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
             cityName = itemView.findViewById(R.id.titleTextView);
             favButton = itemView.findViewById(R.id.favoriteButton);
             tempValue = itemView.findViewById(R.id.temp_value);
-
+            constraintLayout = itemView.findViewById(R.id.frameLayout);
+            itemView.setOnClickListener(this);
             favButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -139,6 +153,11 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
             });
 
         }
+
+        @Override
+        public void onClick(View view) {
+            listener.onClick(view, getAdapterPosition());
+        }
     }
     public boolean getIsCelcius() {
         return isCelcius;
@@ -147,6 +166,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
     public void setIsCelcius(boolean celcius) {
         isCelcius = celcius;
     }
+
 
     private String getTempeture(double tempInC)
     {
@@ -158,5 +178,9 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
         {
             return Math.round(tempInC*9/5+32)+"°F";
         }
+    }
+
+    public interface RecyclerViewClickListener{
+        void onClick(View view, int position);
     }
 }
