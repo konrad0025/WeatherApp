@@ -6,16 +6,23 @@ public class CityItem {
     private String cityName;
     private String favStatus;
     private double temp;
-
+    private double windSpeed;
+    private double windDeg;
+    private double humidity;
+    private double visibility;
     public CityItem() {
     }
 
-    public CityItem(int key_id, int imageResource, String cityName, String favStatus, double temp) {
+    public CityItem(int key_id, int imageResource, String cityName, String favStatus, double temp, double windSpeed, double windDeg, double humidity, double visibility) {
         this.key_id = key_id;
         this.imageResource = imageResource;
         this.cityName = cityName;
         this.favStatus = favStatus;
         this.temp = temp;
+        this.windSpeed = windSpeed;
+        this.windDeg = windDeg;
+        this.humidity = humidity;
+        this.visibility = visibility;
     }
 
     public int getKey_id() {
@@ -53,4 +60,28 @@ public class CityItem {
     public double getTemp() { return temp; }
 
     public void setTemp(double temp) { this.temp = temp; }
+
+    public double getWindSpeed() { return windSpeed; }
+
+    public void setWindSpeed(double windSpeed) { this.windSpeed = windSpeed; }
+
+    public double getWindDeg() { return windDeg; }
+
+    public void setWindDeg(double windDeg) { this.windDeg = windDeg; }
+
+    public double getHumidity() {
+        return humidity;
+    }
+
+    public void setHumidity(double humidity) {
+        this.humidity = humidity;
+    }
+
+    public double getVisibility() {
+        return visibility;
+    }
+
+    public void setVisibility(double visibility) {
+        this.visibility = visibility;
+    }
 }

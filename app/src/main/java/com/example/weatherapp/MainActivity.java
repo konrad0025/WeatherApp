@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
     private FloatingActionButton addButton, menuButton, tempButton;
     private Animation rotateClose, rotateOpen, toBottom, fromBottom;
     private CityAdapter cityAdapter;
-    private String url = "http://api.openweathermap.org/data/2.5/weather";
+    private String url = "http://api.openweathermap.org/data/2.5/forecast";
     private String appId = "4419cc9da0b7cb02657dd65732f95dbb";
     private boolean isMenuButtonClicked = false;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -89,8 +89,8 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
 
         String prev = loadDataTime();
         if (prev.equals("")) {
-            favCityDB.insertIntoTheDatabase("Your Location",0,true);
-            cityItems.add(0, new CityItem(0, R.drawable.cloud, "Your Location", "0", 0));
+            favCityDB.insertIntoTheDatabase("Your Location",0,0,0,0,0,true);
+            cityItems.add(0, new CityItem(0, R.drawable.cloud, "Your Location", "0",0,0,0,0,0));
             cityAdapter.notifyDataSetChanged();
             saveDataTime();
         } else {
@@ -216,12 +216,20 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
                 Log.d("response", response);
                 try {
                     JSONObject jsonResponse = new JSONObject(response);
-                    JSONArray jsonArray = jsonResponse.getJSONArray("weather");
-                    JSONObject jsonObjectWeather = jsonArray.getJSONObject(0);
+                    JSONArray jsonArray = jsonResponse.getJSONArray("list");
+                    JSONObject jsonObjectZero = jsonArray.getJSONObject(0);
+                    JSONArray jsonArrayWeather = jsonObjectZero.getJSONArray("weather");
+                    JSONObject jsonObjectWeather = jsonArrayWeather.getJSONObject(0);
                     String description = jsonObjectWeather.getString("description");
-                    JSONObject jsonObjectMain = jsonResponse.getJSONObject("main");
+                    String time = jsonObjectZero.getString("dt_txt");
+                    JSONObject jsonObjectMain = jsonObjectZero.getJSONObject("main");
+                    JSONObject jsonObjectWind = jsonObjectZero.getJSONObject("wind");
                     double temp = jsonObjectMain.getDouble("temp") - 273.15;
-                    cityItems.add(new CityItem(cityItems.size(), R.drawable.cloud, cityName, "0", temp));
+                    double humidity = jsonObjectMain.getDouble("humidity");
+                    double speed = jsonObjectWind.getDouble("speed");
+                    double deg = jsonObjectWind.getDouble("deg");
+                    double visibility = jsonObjectZero.getDouble("visibility")/10000*100;
+                    cityItems.add(new CityItem(cityItems.size(), R.drawable.cloud, cityName, "0", temp,speed,deg,humidity,visibility));
                     cityAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -257,11 +265,23 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
                     Log.d("response", response);
                     try {
                         JSONObject jsonResponse = new JSONObject(response);
-                        JSONArray jsonArray = jsonResponse.getJSONArray("weather");
-                        JSONObject jsonObjectWeather = jsonArray.getJSONObject(0);
+                        JSONArray jsonArray = jsonResponse.getJSONArray("list");
+                        JSONObject jsonObjectZero = jsonArray.getJSONObject(0);
+                        JSONArray jsonArrayWeather = jsonObjectZero.getJSONArray("weather");
+                        JSONObject jsonObjectWeather = jsonArrayWeather.getJSONObject(0);
                         String description = jsonObjectWeather.getString("description");
-                        JSONObject jsonObjectMain = jsonResponse.getJSONObject("main");
+                        String time = jsonObjectZero.getString("dt_txt");
+                        JSONObject jsonObjectMain = jsonObjectZero.getJSONObject("main");
+                        JSONObject jsonObjectWind = jsonObjectZero.getJSONObject("wind");
                         double temp = jsonObjectMain.getDouble("temp") - 273.15;
+                        double humidity = jsonObjectMain.getDouble("humidity");
+                        double speed = jsonObjectWind.getDouble("speed");
+                        double deg = jsonObjectWind.getDouble("deg");
+                        double visibility = jsonObjectZero.getDouble("visibility")/10000*100;
+                        cityItems.get(j).setHumidity(humidity);
+                        cityItems.get(j).setVisibility(visibility);
+                        cityItems.get(j).setWindSpeed(speed);
+                        cityItems.get(j).setWindDeg(deg);
                         cityItems.get(j).setTemp(temp);
                         Log.d("hello", cityItems.get(j).getCityName() + " " + cityItems.get(j).getTemp() + " " + j);
                         cityAdapter.notifyDataSetChanged();
@@ -329,11 +349,23 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
                             Log.d("response", response);
                             try {
                                 JSONObject jsonResponse = new JSONObject(response);
-                                JSONArray jsonArray = jsonResponse.getJSONArray("weather");
-                                JSONObject jsonObjectWeather = jsonArray.getJSONObject(0);
+                                JSONArray jsonArray = jsonResponse.getJSONArray("list");
+                                JSONObject jsonObjectZero = jsonArray.getJSONObject(0);
+                                JSONArray jsonArrayWeather = jsonObjectZero.getJSONArray("weather");
+                                JSONObject jsonObjectWeather = jsonArrayWeather.getJSONObject(0);
                                 String description = jsonObjectWeather.getString("description");
-                                JSONObject jsonObjectMain = jsonResponse.getJSONObject("main");
+                                String time = jsonObjectZero.getString("dt_txt");
+                                JSONObject jsonObjectMain = jsonObjectZero.getJSONObject("main");
+                                JSONObject jsonObjectWind = jsonObjectZero.getJSONObject("wind");
                                 double temp = jsonObjectMain.getDouble("temp") - 273.15;
+                                double humidity = jsonObjectMain.getDouble("humidity");
+                                double speed = jsonObjectWind.getDouble("speed");
+                                double deg = jsonObjectWind.getDouble("deg");
+                                double visibility = jsonObjectZero.getDouble("visibility")/10000*100;
+                                cityItems.get(0).setHumidity(humidity);
+                                cityItems.get(0).setVisibility(visibility);
+                                cityItems.get(0).setWindSpeed(speed);
+                                cityItems.get(0).setWindDeg(deg);
                                 cityItems.get(0).setTemp(temp);
                                 cityAdapter.notifyDataSetChanged();
                                 favCityDB.updateCity(cityItems.get(0));

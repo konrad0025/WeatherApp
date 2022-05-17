@@ -19,12 +19,16 @@ public class WeatherDetails extends AppCompatActivity {
         setContentView(R.layout.activity_weather_details);
 
         cityItems = favCityDB.getCityList();
-        Bundle extras = getIntent().getExtras();
-        int position = extras.getInt("POSITION");
+        Bundle bundle = getIntent().getExtras();
+        int position = bundle.getInt("POSITION");
+        bundle.putInt("POSITION",position);
         Toast.makeText(WeatherDetails.this, cityItems.get(position).getCityName(), Toast.LENGTH_SHORT).show();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.frameLayout,new WindFragment());
+        WindFragment windFragment = new WindFragment(cityItems.get(position));
+        fragmentTransaction.replace(R.id.frameLayout,windFragment);
+        fragmentTransaction.replace(R.id.overAllData,new OverAllDataFragment());
         fragmentTransaction.commit();
+
     }
 }
