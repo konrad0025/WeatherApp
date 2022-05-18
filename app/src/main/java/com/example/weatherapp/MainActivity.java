@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +23,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -44,11 +47,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements AddNewCityDialog.CityDialogListener {
+public class MainActivity extends AppCompatActivity implements AddNewCityDialog.CityDialogListener, Serializable {
 
     private ArrayList<CityItem> cityItems = new ArrayList<>();
     private FavCityDB favCityDB = new FavCityDB(this);
@@ -61,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
     private SwipeRefreshLayout swipeRefreshLayout;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private CityAdapter.RecyclerViewClickListener listener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
             @Override
             public void onClick(View view, int position) {
                 Intent intent = new Intent(MainActivity.this,WeatherDetails.class);
-                intent.putExtra("POSITION",position);
+                intent.putExtra("POSITION", cityItems.get(position));
                 startActivity(intent);
             }
         };

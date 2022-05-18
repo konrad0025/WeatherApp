@@ -1,6 +1,9 @@
 package com.example.weatherapp;
 
-public class CityItem {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class CityItem implements Parcelable {
     private int key_id;
     private int imageResource;
     private String cityName;
@@ -24,6 +27,30 @@ public class CityItem {
         this.humidity = humidity;
         this.visibility = visibility;
     }
+
+    protected CityItem(Parcel in) {
+        key_id = in.readInt();
+        imageResource = in.readInt();
+        cityName = in.readString();
+        favStatus = in.readString();
+        temp = in.readDouble();
+        windSpeed = in.readDouble();
+        windDeg = in.readDouble();
+        humidity = in.readDouble();
+        visibility = in.readDouble();
+    }
+
+    public static final Creator<CityItem> CREATOR = new Creator<CityItem>() {
+        @Override
+        public CityItem createFromParcel(Parcel in) {
+            return new CityItem(in);
+        }
+
+        @Override
+        public CityItem[] newArray(int size) {
+            return new CityItem[size];
+        }
+    };
 
     public int getKey_id() {
         return key_id;
@@ -83,5 +110,23 @@ public class CityItem {
 
     public void setVisibility(double visibility) {
         this.visibility = visibility;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(key_id);
+        parcel.writeInt(imageResource);
+        parcel.writeString(cityName);
+        parcel.writeString(favStatus);
+        parcel.writeDouble(temp);
+        parcel.writeDouble(windSpeed);
+        parcel.writeDouble(windDeg);
+        parcel.writeDouble(humidity);
+        parcel.writeDouble(visibility);
     }
 }

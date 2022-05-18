@@ -1,30 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/overall"
+
+    android:paddingLeft="2dp"
+    android:paddingRight="2dp"
+    android:orientation="vertical"
     tools:context=".OverAllDataFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:id="@+id/speed"
-        android:layout_width="wrap_content"
+        android:id="@+id/cityName"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Placeholder"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
 
-    <TextView
-        android:id="@+id/degrees"
-        android:layout_width="wrap_content"
+        android:textAlignment="center"
+        android:text="CityName"
+        android:textSize="40sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Placeholder"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/speed" />
+        android:layout_gravity="center"
+        android:layout_weight="0"
+
+        android:layout_marginTop="8dp">
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/latitudeName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Latitude: "
+            android:textSize="20sp"
+            app:layout_constraintEnd_toStartOf="@id/latitudeValue"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/latitudeValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Placeholder"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/longitudeName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Longitude: "
+            android:textSize="20sp"
+            app:layout_constraintEnd_toStartOf="@id/longitudeValue"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/latitudeName" />
+
+        <TextView
+            android:id="@+id/longitudeValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Placeholder"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="@id/latitudeValue"
+
+            app:layout_constraintTop_toBottomOf="@+id/latitudeName" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:id="@+id/timeValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:text="Time"
+            android:textAlignment="textStart"
+            android:textSize="40sp"
+            app:layout_constraintEnd_toStartOf="@+id/tempValue"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tempValue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:text="temp"
+            android:textAlignment="textEnd"
+            android:textSize="40sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/timeValue"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</LinearLayout>
