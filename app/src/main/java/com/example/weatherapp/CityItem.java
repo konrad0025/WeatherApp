@@ -13,10 +13,14 @@ public class CityItem implements Parcelable {
     private double windDeg;
     private double humidity;
     private double visibility;
+    private double longitude;
+    private double latitude;
+    private double pressure;
+
     public CityItem() {
     }
 
-    public CityItem(int key_id, int imageResource, String cityName, String favStatus, double temp, double windSpeed, double windDeg, double humidity, double visibility) {
+    public CityItem(int key_id, int imageResource, String cityName, String favStatus, double temp, double windSpeed, double windDeg, double humidity, double visibility, double longitude, double latitude, double pressure) {
         this.key_id = key_id;
         this.imageResource = imageResource;
         this.cityName = cityName;
@@ -26,6 +30,9 @@ public class CityItem implements Parcelable {
         this.windDeg = windDeg;
         this.humidity = humidity;
         this.visibility = visibility;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.pressure = pressure;
     }
 
     protected CityItem(Parcel in) {
@@ -38,6 +45,9 @@ public class CityItem implements Parcelable {
         windDeg = in.readDouble();
         humidity = in.readDouble();
         visibility = in.readDouble();
+        longitude = in.readDouble();
+        latitude = in.readDouble();
+        pressure = in.readDouble();
     }
 
     public static final Creator<CityItem> CREATOR = new Creator<CityItem>() {
@@ -128,5 +138,32 @@ public class CityItem implements Parcelable {
         parcel.writeDouble(windDeg);
         parcel.writeDouble(humidity);
         parcel.writeDouble(visibility);
+        parcel.writeDouble(longitude);
+        parcel.writeDouble(latitude);
+        parcel.writeDouble(pressure);
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getPressure() {
+        return pressure;
+    }
+
+    public void setPressure(double pressure) {
+        this.pressure = pressure;
     }
 }

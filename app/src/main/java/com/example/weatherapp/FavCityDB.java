@@ -25,6 +25,9 @@ public class FavCityDB extends SQLiteOpenHelper {
     public static String WIND_DEG = "windDeg";
     public static String VISIBILITY = "visibility";
     public static String HUMIDITY = "humidity";
+    public static String LONGITUDE = "longitude";
+    public static String LATITUDE = "latitude";
+    public static String PRESSURE = "pressure";
 
     public static String TABLE_NAME_2 = "days";
     public static String DATE_TIME = "dateTime";
@@ -38,7 +41,7 @@ public class FavCityDB extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + "("
-                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + CITY_NAME + " TEXT," + WIND_SPEED + " TEXT," + WIND_DEG + " TEXT," + VISIBILITY + " TEXT," + HUMIDITY + " TEXT," + TEMP_C + " TEXT)");
+                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + CITY_NAME + " TEXT," + WIND_SPEED + " TEXT," + LONGITUDE + " TEXT," + LATITUDE + " TEXT," + PRESSURE + " TEXT," + WIND_DEG + " TEXT," + VISIBILITY + " TEXT," + HUMIDITY + " TEXT," + TEMP_C + " TEXT)");
         /*sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME_2 + "("
                 + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + DATE_TIME + " TEXT," + CITY_ID + " INTEGER," + TEMP_C + " TEXT)");*/
     }
@@ -48,7 +51,7 @@ public class FavCityDB extends SQLiteOpenHelper {
 
     }
 
-    public int insertIntoTheDatabase(String cityName, double temp, double speed, double deg, double humidity, double visibility ,boolean isFisrtUse)
+    public int insertIntoTheDatabase(String cityName, double temp, double speed, double deg, double humidity, double visibility, double longitude, double latitude, double pressure ,boolean isFisrtUse)
     {
         SQLiteDatabase db=this.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -58,6 +61,9 @@ public class FavCityDB extends SQLiteOpenHelper {
         cv.put(WIND_DEG, deg);
         cv.put(HUMIDITY, humidity);
         cv.put(VISIBILITY, visibility);
+        cv.put(PRESSURE, pressure);
+        cv.put(LONGITUDE, longitude);
+        cv.put(LATITUDE, latitude);
         if(isFisrtUse)
         {
             cv.put(KEY_ID,0);
@@ -82,6 +88,9 @@ public class FavCityDB extends SQLiteOpenHelper {
         final int windDegID = cursor.getColumnIndex(WIND_DEG);
         final int humidityID = cursor.getColumnIndex(HUMIDITY);
         final int visibilityID = cursor.getColumnIndex(VISIBILITY);
+        final int longitudeID = cursor.getColumnIndex(LONGITUDE);
+        final int latitudeID = cursor.getColumnIndex(LATITUDE);
+        final int pressureID = cursor.getColumnIndex(PRESSURE);
         final ArrayList<CityItem> cityList = new ArrayList<>();
         if(!cursor.moveToFirst())
         {
@@ -95,8 +104,11 @@ public class FavCityDB extends SQLiteOpenHelper {
             final String windDegIDValue = cursor.getString(windDegID);
             final String humidityIDValue = cursor.getString(humidityID);
             final String visibilityIDValue = cursor.getString(visibilityID);
+            final String longitudeIDValue = cursor.getString(longitudeID);
+            final String latitudeIDValue = cursor.getString(latitudeID);
+            final String pressureIDValue = cursor.getString(pressureID);
             Log.d("checking", name + " " + cityIdValue + " " + tempIdValue);
-            cityList.add(new CityItem(Integer.parseInt(cityIdValue),R.drawable.cloud,name,"1",Double.parseDouble(tempIdValue),Double.parseDouble(windSpeedIDValue),Double.parseDouble(windDegIDValue),Double.parseDouble(humidityIDValue),Double.parseDouble(visibilityIDValue)));
+            cityList.add(new CityItem(Integer.parseInt(cityIdValue),R.drawable.cloud,name,"1",Double.parseDouble(tempIdValue),Double.parseDouble(windSpeedIDValue),Double.parseDouble(windDegIDValue),Double.parseDouble(humidityIDValue),Double.parseDouble(visibilityIDValue),Double.parseDouble(longitudeIDValue),Double.parseDouble(latitudeIDValue),Double.parseDouble(pressureIDValue)));
         }while(cursor.moveToNext());
         return cityList;
     }
@@ -117,6 +129,9 @@ public class FavCityDB extends SQLiteOpenHelper {
         cv.put(WIND_DEG, cityItem.getWindDeg());
         cv.put(HUMIDITY, cityItem.getHumidity());
         cv.put(VISIBILITY, cityItem.getVisibility());
+        cv.put(LONGITUDE, cityItem.getLongitude());
+        cv.put(LATITUDE, cityItem.getLatitude());
+        cv.put(PRESSURE, cityItem.getPressure());
         db.update(TABLE_NAME, cv, "id = ?", new String[]{cityItem.getKey_id()+""});
         Log.d("FavCityDB Status", cityItem.getCityName() + ", status - " + cv);
     }

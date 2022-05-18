@@ -94,8 +94,8 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
 
         String prev = loadDataTime();
         if (prev.equals("")) {
-            favCityDB.insertIntoTheDatabase("Your Location",0,0,0,0,0,true);
-            cityItems.add(0, new CityItem(0, R.drawable.cloud, "Your Location", "0",0,0,0,0,0));
+            favCityDB.insertIntoTheDatabase("Your Location",0,0,0,0,0,0,0,0,true);
+            cityItems.add(0, new CityItem(0, R.drawable.cloud, "Your Location", "0",0,0,0,0,0,0,0,0));
             cityAdapter.notifyDataSetChanged();
             saveDataTime();
         } else {
@@ -234,7 +234,15 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
                     double speed = jsonObjectWind.getDouble("speed");
                     double deg = jsonObjectWind.getDouble("deg");
                     double visibility = jsonObjectZero.getDouble("visibility")/10000*100;
-                    cityItems.add(new CityItem(cityItems.size(), R.drawable.cloud, cityName, "0", temp,speed,deg,humidity,visibility));
+                    double pressure = jsonObjectMain.getDouble("pressure");
+
+                    JSONObject jsonCity = jsonResponse.getJSONObject("city");
+                    JSONObject jsonCityCoord = jsonCity.getJSONObject("coord");
+
+                    double lon = jsonCityCoord.getDouble("lon");
+                    double lat = jsonCityCoord.getDouble("lat");
+
+                    cityItems.add(new CityItem(cityItems.size(), R.drawable.cloud, cityName, "0", temp,speed,deg,humidity,visibility,lon,lat,pressure));
                     cityAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -283,11 +291,21 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
                         double speed = jsonObjectWind.getDouble("speed");
                         double deg = jsonObjectWind.getDouble("deg");
                         double visibility = jsonObjectZero.getDouble("visibility")/10000*100;
+                        double pressure = jsonObjectMain.getDouble("pressure");
+
+                        JSONObject jsonCity = jsonResponse.getJSONObject("city");
+                        JSONObject jsonCityCoord = jsonCity.getJSONObject("coord");
+
+                        double lon = jsonCityCoord.getDouble("lon");
+                        double lat = jsonCityCoord.getDouble("lat");
                         cityItems.get(j).setHumidity(humidity);
                         cityItems.get(j).setVisibility(visibility);
                         cityItems.get(j).setWindSpeed(speed);
                         cityItems.get(j).setWindDeg(deg);
                         cityItems.get(j).setTemp(temp);
+                        cityItems.get(j).setLatitude(lat);
+                        cityItems.get(j).setLongitude(lon);
+                        cityItems.get(j).setPressure(pressure);
                         Log.d("hello", cityItems.get(j).getCityName() + " " + cityItems.get(j).getTemp() + " " + j);
                         cityAdapter.notifyDataSetChanged();
                         if (cityItems.get(j).getFavStatus().equals("1")) {
@@ -367,11 +385,22 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
                                 double speed = jsonObjectWind.getDouble("speed");
                                 double deg = jsonObjectWind.getDouble("deg");
                                 double visibility = jsonObjectZero.getDouble("visibility")/10000*100;
+                                double pressure = jsonObjectMain.getDouble("pressure");
+
+                                JSONObject jsonCity = jsonResponse.getJSONObject("city");
+                                JSONObject jsonCityCoord = jsonCity.getJSONObject("coord");
+
+                                double lon = jsonCityCoord.getDouble("lon");
+                                double lat = jsonCityCoord.getDouble("lat");
+
                                 cityItems.get(0).setHumidity(humidity);
                                 cityItems.get(0).setVisibility(visibility);
                                 cityItems.get(0).setWindSpeed(speed);
                                 cityItems.get(0).setWindDeg(deg);
                                 cityItems.get(0).setTemp(temp);
+                                cityItems.get(0).setLatitude(lat);
+                                cityItems.get(0).setLongitude(lon);
+                                cityItems.get(0).setPressure(pressure);
                                 cityAdapter.notifyDataSetChanged();
                                 favCityDB.updateCity(cityItems.get(0));
                                 Toast.makeText(MainActivity.this, "Data refreshed successfully", Toast.LENGTH_SHORT).show();

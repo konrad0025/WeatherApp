@@ -58,6 +58,7 @@ public class WindFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         viewModel = ViewModelProviders.of(getActivity()).get(SharedViewModel.class);
         viewModel.getCity().observe(requireActivity(), new Observer<CityItem>() {
             @SuppressLint("SetTextI18n")
