@@ -3,6 +3,8 @@ package com.example.weatherapp;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+
 public class CityItem implements Parcelable {
     private int key_id;
     private int imageResource;
@@ -16,11 +18,12 @@ public class CityItem implements Parcelable {
     private double longitude;
     private double latitude;
     private double pressure;
+    private ArrayList<FutureWeatherItem> weatherItems;
 
     public CityItem() {
     }
 
-    public CityItem(int key_id, int imageResource, String cityName, String favStatus, double temp, double windSpeed, double windDeg, double humidity, double visibility, double longitude, double latitude, double pressure) {
+    public CityItem(int key_id, int imageResource, String cityName, String favStatus, double temp, double windSpeed, double windDeg, double humidity, double visibility, double longitude, double latitude, double pressure, ArrayList<FutureWeatherItem> weatherItems) {
         this.key_id = key_id;
         this.imageResource = imageResource;
         this.cityName = cityName;
@@ -33,6 +36,7 @@ public class CityItem implements Parcelable {
         this.longitude = longitude;
         this.latitude = latitude;
         this.pressure = pressure;
+        this.weatherItems = weatherItems;
     }
 
     protected CityItem(Parcel in) {
@@ -48,6 +52,29 @@ public class CityItem implements Parcelable {
         longitude = in.readDouble();
         latitude = in.readDouble();
         pressure = in.readDouble();
+    }
+
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(key_id);
+        dest.writeInt(imageResource);
+        dest.writeString(cityName);
+        dest.writeString(favStatus);
+        dest.writeDouble(temp);
+        dest.writeDouble(windSpeed);
+        dest.writeDouble(windDeg);
+        dest.writeDouble(humidity);
+        dest.writeDouble(visibility);
+        dest.writeDouble(longitude);
+        dest.writeDouble(latitude);
+        dest.writeDouble(pressure);
+        dest.writeTypedList(weatherItems);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<CityItem> CREATOR = new Creator<CityItem>() {
@@ -122,26 +149,7 @@ public class CityItem implements Parcelable {
         this.visibility = visibility;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(key_id);
-        parcel.writeInt(imageResource);
-        parcel.writeString(cityName);
-        parcel.writeString(favStatus);
-        parcel.writeDouble(temp);
-        parcel.writeDouble(windSpeed);
-        parcel.writeDouble(windDeg);
-        parcel.writeDouble(humidity);
-        parcel.writeDouble(visibility);
-        parcel.writeDouble(longitude);
-        parcel.writeDouble(latitude);
-        parcel.writeDouble(pressure);
-    }
 
     public double getLongitude() {
         return longitude;
@@ -165,5 +173,13 @@ public class CityItem implements Parcelable {
 
     public void setPressure(double pressure) {
         this.pressure = pressure;
+    }
+
+    public ArrayList<FutureWeatherItem> getWeatherItems() {
+        return weatherItems;
+    }
+
+    public void setWeatherItems(ArrayList<FutureWeatherItem> weatherItems) {
+        this.weatherItems = weatherItems;
     }
 }

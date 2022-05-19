@@ -73,6 +73,10 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
         setContentView(R.layout.activity_main);
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
+            SharedPreferences sharedpreferences = getSharedPreferences("lastUpdate", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putString("Time", "");
+            editor.commit();
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{
                     Manifest.permission.ACCESS_FINE_LOCATION
             }, 100);
@@ -94,8 +98,8 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
 
         String prev = loadDataTime();
         if (prev.equals("")) {
-            favCityDB.insertIntoTheDatabase("Your Location",0,0,0,0,0,0,0,0,true);
-            cityItems.add(0, new CityItem(0, R.drawable.cloud, "Your Location", "0",0,0,0,0,0,0,0,0));
+            favCityDB.insertIntoTheDatabase("Your Location",0,0,0,0,0,0,0,0,new ArrayList<FutureWeatherItem>(),true);
+            cityItems.add(0, new CityItem(0, R.drawable.cloud, "Your Location", "0",0,0,0,0,0,0,0,0,new ArrayList<FutureWeatherItem>()));
             cityAdapter.notifyDataSetChanged();
             saveDataTime();
         } else {
@@ -241,8 +245,23 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
 
                     double lon = jsonCityCoord.getDouble("lon");
                     double lat = jsonCityCoord.getDouble("lat");
+                    int i = 1;
+                    ArrayList<FutureWeatherItem> weatherItems = new ArrayList<FutureWeatherItem>();
+                    while(jsonArray.getJSONObject(i).length()!=0)
+                    {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        String timeItem = jsonObject.getString("dt_txt");
+                        jsonObjectMain = jsonObjectZero.getJSONObject("main");
+                        Double tempItem = jsonObjectMain.getDouble("temp") - 273.15;
+                        jsonArrayWeather = jsonObjectZero.getJSONArray("weather");
+                        jsonObjectWeather = jsonArrayWeather.getJSONObject(0);
+                        String descriptionItem = jsonObjectWeather.getString("description");
+                        String weatherInfoItem = jsonObjectWeather.getString("main");
+                        weatherItems.add(new FutureWeatherItem(tempItem,weatherInfoItem,descriptionItem,timeItem,0));
+                        i++;
 
-                    cityItems.add(new CityItem(cityItems.size(), R.drawable.cloud, cityName, "0", temp,speed,deg,humidity,visibility,lon,lat,pressure));
+                    }
+                    cityItems.add(new CityItem(cityItems.size(), R.drawable.cloud, cityName, "0", temp,speed,deg,humidity,visibility,lon,lat,pressure,weatherItems));
                     cityAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -298,6 +317,22 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
 
                         double lon = jsonCityCoord.getDouble("lon");
                         double lat = jsonCityCoord.getDouble("lat");
+                        int i = 1;
+                        ArrayList<FutureWeatherItem> weatherItems = new ArrayList<FutureWeatherItem>();
+                        while(jsonArray.getJSONObject(i).length()!=0)
+                        {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            String timeItem = jsonObject.getString("dt_txt");
+                            jsonObjectMain = jsonObjectZero.getJSONObject("main");
+                            Double tempItem = jsonObjectMain.getDouble("temp") - 273.15;
+                            jsonArrayWeather = jsonObjectZero.getJSONArray("weather");
+                            jsonObjectWeather = jsonArrayWeather.getJSONObject(0);
+                            String descriptionItem = jsonObjectWeather.getString("description");
+                            String weatherInfoItem = jsonObjectWeather.getString("main");
+                            weatherItems.add(new FutureWeatherItem(tempItem,weatherInfoItem,descriptionItem,timeItem,0));
+                            i++;
+
+                        }
                         cityItems.get(j).setHumidity(humidity);
                         cityItems.get(j).setVisibility(visibility);
                         cityItems.get(j).setWindSpeed(speed);
@@ -306,6 +341,7 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
                         cityItems.get(j).setLatitude(lat);
                         cityItems.get(j).setLongitude(lon);
                         cityItems.get(j).setPressure(pressure);
+                        cityItems.get(j).setWeatherItems(weatherItems);
                         Log.d("hello", cityItems.get(j).getCityName() + " " + cityItems.get(j).getTemp() + " " + j);
                         cityAdapter.notifyDataSetChanged();
                         if (cityItems.get(j).getFavStatus().equals("1")) {
@@ -356,6 +392,7 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
 
     @SuppressLint("MissingPermission")
     public void getLocation() {
+        Log.d("response", "response=waiting");
         fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
             @Override
             public void onComplete(@NonNull Task<Location> task) {
@@ -392,7 +429,22 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
 
                                 double lon = jsonCityCoord.getDouble("lon");
                                 double lat = jsonCityCoord.getDouble("lat");
+                                int i = 1;
+                                ArrayList<FutureWeatherItem> weatherItems = new ArrayList<FutureWeatherItem>();
+                                while(jsonArray.getJSONObject(i).length()!=0)
+                                {
+                                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                    String timeItem = jsonObject.getString("dt_txt");
+                                    jsonObjectMain = jsonObjectZero.getJSONObject("main");
+                                    Double tempItem = jsonObjectMain.getDouble("temp") - 273.15;
+                                    jsonObjectWeather = jsonArrayWeather.getJSONObject(0);
+                                    jsonArrayWeather = jsonObjectZero.getJSONArray("weather");
+                                    String descriptionItem = jsonObjectWeather.getString("description");
+                                    String weatherInfoItem = jsonObjectWeather.getString("main");
+                                    weatherItems.add(new FutureWeatherItem(tempItem,weatherInfoItem,descriptionItem,timeItem,0));
+                                    i++;
 
+                                }
                                 cityItems.get(0).setHumidity(humidity);
                                 cityItems.get(0).setVisibility(visibility);
                                 cityItems.get(0).setWindSpeed(speed);
@@ -401,6 +453,7 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
                                 cityItems.get(0).setLatitude(lat);
                                 cityItems.get(0).setLongitude(lon);
                                 cityItems.get(0).setPressure(pressure);
+                                cityItems.get(0).setWeatherItems(weatherItems);
                                 cityAdapter.notifyDataSetChanged();
                                 favCityDB.updateCity(cityItems.get(0));
                                 Toast.makeText(MainActivity.this, "Data refreshed successfully", Toast.LENGTH_SHORT).show();
@@ -425,6 +478,7 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Log.d("hello","wi n iwn");
         getLocation();
     }
 }

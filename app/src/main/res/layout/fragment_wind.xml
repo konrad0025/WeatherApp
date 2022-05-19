@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/wind"
+    android:paddingLeft="2dp"
+    android:paddingRight="2dp"
     tools:context=".WindFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout

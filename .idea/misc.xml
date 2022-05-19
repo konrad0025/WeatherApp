@@ -4,8 +4,9 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/Konrad/AndroidStudioProjects/WeatherApp/app/src/main/res/drawable/ic_baseline_yellow_24.xml" value="0.3828125" />
-        <entry key="..\:/Users/Konrad/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/Konrad/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/Users/Konrad/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/activity_weather_details.xml" value="0.20625" />
+        <entry key="..\:/Users/Konrad/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/fragment_future_weather.xml" value="0.2046875" />
         <entry key="..\:/Users/Konrad/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/fragment_over_all_data.xml" value="0.22" />
         <entry key="..\:/Users/Konrad/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/fragment_wind.xml" value="0.67" />
         <entry key="..\:/Users/Konrad/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/item.xml" value="0.22" />
