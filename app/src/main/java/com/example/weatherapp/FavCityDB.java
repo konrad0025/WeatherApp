@@ -16,8 +16,8 @@ import java.util.ArrayList;
 
 public class FavCityDB extends SQLiteOpenHelper {
 
-    private static int DB_VERSION = 2;
-    private static String DATABASE_NAME = "FavCityDBv2";
+    private static int DB_VERSION = 4;
+    private static String DATABASE_NAME = "FavCityDBv4";
     private static String TABLE_NAME = "city";
     public static String KEY_ID = "id";
     public static String CITY_NAME = "cityName";
@@ -46,7 +46,7 @@ public class FavCityDB extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + "("
                 + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + CITY_NAME + " TEXT," + WIND_SPEED + " TEXT," + LONGITUDE + " TEXT," + LATITUDE + " TEXT," + PRESSURE + " TEXT," + WIND_DEG + " TEXT," + VISIBILITY + " TEXT," + HUMIDITY + " TEXT," + TEMP_C + " TEXT)");
         sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME_2 + "("
-                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + DATE_TIME + " TEXT," + DETAILS_INFO + " TEXT," + NAME_INFO + " TEXT," + CITY_ID + " INTEGER," + TEMP_C + " TEXT)");
+                + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + DATE_TIME + " TEXT," + DETAILS_INFO + " TEXT," + NAME_INFO + " TEXT," + CITY_ID + " TEXT," + TEMP_C + " TEXT)");
     }
 
     @Override
@@ -91,7 +91,7 @@ public class FavCityDB extends SQLiteOpenHelper {
 
 
         long idReturn = db.insert(TABLE_NAME_2,null,cv);
-        Log.d("FavCityDB2 Status", weatherName + " " + temp + ", status - " + cv);
+        Log.d("FavCityDB2 Status", weatherName + " " + temp + ", status - " + cv+" tutaj patrz "+idReturn);
         return (int)idReturn;
     }
 
@@ -105,7 +105,11 @@ public class FavCityDB extends SQLiteOpenHelper {
         String sql = "select * from " + TABLE_NAME_2 + " where " + CITY_ID + " = " + id + "";
         return db.rawQuery(sql,null,null);
     }
-
+    public Cursor readAllDataItem(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sql = "select * from " + TABLE_NAME_2;
+        return db.rawQuery(sql,null,null);
+    }
     public ArrayList<CityItem> getCityList()
     {
         Cursor cursor = readAllData();
@@ -128,7 +132,6 @@ public class FavCityDB extends SQLiteOpenHelper {
             final String name = cursor.getString(cityNameID);
             final String cityIdValue = cursor.getString(cityID);
             final String tempIdValue = cursor.getString(tempID);
-            Log.d("hello",windSpeedID+"dasd"+windSpeedID+"dasdas"+latitudeID+"dasdasdas"+cityID+"adasdas"+name);
             final String windSpeedIDValue = cursor.getString(windSpeedID);
             final String windDegIDValue = cursor.getString(windDegID);
             final String humidityIDValue = cursor.getString(humidityID);
@@ -136,16 +139,14 @@ public class FavCityDB extends SQLiteOpenHelper {
             final String longitudeIDValue = cursor.getString(longitudeID);
             final String latitudeIDValue = cursor.getString(latitudeID);
             final String pressureIDValue = cursor.getString(pressureID);
-            Log.d("checking", name + " " + cityIdValue + " " + tempIdValue);
 
             Cursor cursor2 = readAllDataItem(Integer.parseInt(cityIdValue));
-            final int weatherNameID = cursor.getColumnIndex(NAME_INFO);
-            final int weatherDetailsID = cursor.getColumnIndex(DETAILS_INFO);
-            final int tempItemID = cursor.getColumnIndex(TEMP_C);
-            final int timeID = cursor.getColumnIndex(DATE_TIME);
-            final int itemID = cursor.getColumnIndex(KEY_ID);
+            final int weatherNameID = cursor2.getColumnIndex(NAME_INFO);
+            final int weatherDetailsID = cursor2.getColumnIndex(DETAILS_INFO);
+            final int tempItemID = cursor2.getColumnIndex(TEMP_C);
+            final int timeID = cursor2.getColumnIndex(DATE_TIME);
+            final int itemID = cursor2.getColumnIndex(KEY_ID);
             ArrayList<FutureWeatherItem> weatherItems = new ArrayList<>();
-
             if(!cursor2.moveToFirst())
             {
                 weatherItems = null;

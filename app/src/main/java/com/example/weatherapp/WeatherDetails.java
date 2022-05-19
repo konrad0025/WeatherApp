@@ -33,8 +33,11 @@ public class WeatherDetails extends AppCompatActivity {
         WindFragment windFragment = new WindFragment();
         OverAllDataFragment overAllDataFragment = new OverAllDataFragment();
         overAllDataFragment.setArguments(bundle);
+        FutureWeatherFragment futureWeatherFragment = new FutureWeatherFragment();
+        futureWeatherFragment.setArguments(bundle);
         fragmentTransaction.replace(R.id.frameLayout,windFragment);
         fragmentTransaction.replace(R.id.overAllData,overAllDataFragment);
+        fragmentTransaction.replace(R.id.weatherDays,futureWeatherFragment);
         fragmentTransaction.commit();
 
     }

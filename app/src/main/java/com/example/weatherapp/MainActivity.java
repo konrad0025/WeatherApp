@@ -247,14 +247,14 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
                     double lat = jsonCityCoord.getDouble("lat");
                     int i = 1;
                     ArrayList<FutureWeatherItem> weatherItems = new ArrayList<FutureWeatherItem>();
-                    while(jsonArray.getJSONObject(i).length()!=0)
+                    while(i<40)
                     {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         String timeItem = jsonObject.getString("dt_txt");
-                        jsonObjectMain = jsonObjectZero.getJSONObject("main");
+                        jsonObjectMain = jsonObject.getJSONObject("main");
                         Double tempItem = jsonObjectMain.getDouble("temp") - 273.15;
-                        jsonArrayWeather = jsonObjectZero.getJSONArray("weather");
                         jsonObjectWeather = jsonArrayWeather.getJSONObject(0);
+                        jsonArrayWeather = jsonObject.getJSONArray("weather");
                         String descriptionItem = jsonObjectWeather.getString("description");
                         String weatherInfoItem = jsonObjectWeather.getString("main");
                         weatherItems.add(new FutureWeatherItem(tempItem,weatherInfoItem,descriptionItem,timeItem,0));
@@ -276,10 +276,9 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
         });
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
         requestQueue.add(stringRequest);
-        Log.d("helollo", "/n/n/n/dasdasdasd");
+
         saveDataTime();
-        Log.d("helollo", "/n/n/n/dasdasdasd");
-        Log.d("helollo", loadDataTime().toString());
+
     }
 
     private int i;
@@ -319,13 +318,13 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
                         double lat = jsonCityCoord.getDouble("lat");
                         int i = 1;
                         ArrayList<FutureWeatherItem> weatherItems = new ArrayList<FutureWeatherItem>();
-                        while(jsonArray.getJSONObject(i).length()!=0)
+                        while(i<40)
                         {
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
                             String timeItem = jsonObject.getString("dt_txt");
-                            jsonObjectMain = jsonObjectZero.getJSONObject("main");
+                            jsonObjectMain = jsonObject.getJSONObject("main");
                             Double tempItem = jsonObjectMain.getDouble("temp") - 273.15;
-                            jsonArrayWeather = jsonObjectZero.getJSONArray("weather");
+                            jsonArrayWeather = jsonObject.getJSONArray("weather");
                             jsonObjectWeather = jsonArrayWeather.getJSONObject(0);
                             String descriptionItem = jsonObjectWeather.getString("description");
                             String weatherInfoItem = jsonObjectWeather.getString("main");
@@ -431,14 +430,14 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
                                 double lat = jsonCityCoord.getDouble("lat");
                                 int i = 1;
                                 ArrayList<FutureWeatherItem> weatherItems = new ArrayList<FutureWeatherItem>();
-                                while(jsonArray.getJSONObject(i).length()!=0)
+                                while(i<40)
                                 {
                                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                                     String timeItem = jsonObject.getString("dt_txt");
-                                    jsonObjectMain = jsonObjectZero.getJSONObject("main");
+                                    jsonObjectMain = jsonObject.getJSONObject("main");
                                     Double tempItem = jsonObjectMain.getDouble("temp") - 273.15;
+                                    jsonArrayWeather = jsonObject.getJSONArray("weather");
                                     jsonObjectWeather = jsonArrayWeather.getJSONObject(0);
-                                    jsonArrayWeather = jsonObjectZero.getJSONArray("weather");
                                     String descriptionItem = jsonObjectWeather.getString("description");
                                     String weatherInfoItem = jsonObjectWeather.getString("main");
                                     weatherItems.add(new FutureWeatherItem(tempItem,weatherInfoItem,descriptionItem,timeItem,0));
@@ -478,7 +477,6 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.d("hello","wi n iwn");
         getLocation();
     }
 }

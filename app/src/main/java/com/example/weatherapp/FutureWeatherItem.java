@@ -25,6 +25,7 @@ public class FutureWeatherItem implements Parcelable {
         temp = in.readDouble();
         weather = in.readString();
         description = in.readString();
+        dateTime = in.readString();
         id = in.readInt();
     }
 
@@ -33,6 +34,7 @@ public class FutureWeatherItem implements Parcelable {
         dest.writeDouble(temp);
         dest.writeString(weather);
         dest.writeString(description);
+        dest.writeString(dateTime);
         dest.writeInt(id);
     }
 

@@ -39,6 +39,7 @@ public class CityItem implements Parcelable {
         this.weatherItems = weatherItems;
     }
 
+
     protected CityItem(Parcel in) {
         key_id = in.readInt();
         imageResource = in.readInt();
@@ -52,8 +53,8 @@ public class CityItem implements Parcelable {
         longitude = in.readDouble();
         latitude = in.readDouble();
         pressure = in.readDouble();
+        weatherItems = in.createTypedArrayList(FutureWeatherItem.CREATOR);
     }
-
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {

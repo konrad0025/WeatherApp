@@ -9,8 +9,9 @@
         <entry key="..\:/Users/Konrad/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/fragment_future_weather.xml" value="0.2046875" />
         <entry key="..\:/Users/Konrad/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/fragment_over_all_data.xml" value="0.22" />
         <entry key="..\:/Users/Konrad/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/fragment_wind.xml" value="0.67" />
-        <entry key="..\:/Users/Konrad/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/item.xml" value="0.22" />
+        <entry key="..\:/Users/Konrad/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/item.xml" value="0.1" />
         <entry key="..\:/Users/Konrad/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/layout_add_new_city.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Konrad/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/row_item.xml" value="0.5" />
         <entry key="..\:/Users/Konrad/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/test.xml" value="0.2046875" />
       </map>
     </option>
