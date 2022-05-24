@@ -85,12 +85,12 @@
 
         android:layout_marginTop="8dp">
 
-        <TextView
+        <TextClock
             android:id="@+id/timeValue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
-            android:text="Time"
+            android:format24Hour="hh:mm:ss"
+            android:format12Hour="hh:mm:ss a"
             android:textAlignment="textStart"
             android:textSize="40sp"
             app:layout_constraintEnd_toStartOf="@+id/tempValue"

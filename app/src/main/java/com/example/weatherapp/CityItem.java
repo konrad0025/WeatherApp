@@ -18,12 +18,13 @@ public class CityItem implements Parcelable {
     private double longitude;
     private double latitude;
     private double pressure;
+    private int timezone;
     private ArrayList<FutureWeatherItem> weatherItems;
 
     public CityItem() {
     }
 
-    public CityItem(int key_id, int imageResource, String cityName, String favStatus, double temp, double windSpeed, double windDeg, double humidity, double visibility, double longitude, double latitude, double pressure, ArrayList<FutureWeatherItem> weatherItems) {
+    public CityItem(int key_id, int imageResource, String cityName, String favStatus, double temp, double windSpeed, double windDeg, double humidity, double visibility, double longitude, double latitude, double pressure, ArrayList<FutureWeatherItem> weatherItems,int timezone) {
         this.key_id = key_id;
         this.imageResource = imageResource;
         this.cityName = cityName;
@@ -37,8 +38,16 @@ public class CityItem implements Parcelable {
         this.latitude = latitude;
         this.pressure = pressure;
         this.weatherItems = weatherItems;
+        this.timezone = timezone;
     }
 
+    public int getTimezone() {
+        return timezone;
+    }
+
+    public void setTimezone(int timezone) {
+        this.timezone = timezone;
+    }
 
     protected CityItem(Parcel in) {
         key_id = in.readInt();
@@ -53,6 +62,7 @@ public class CityItem implements Parcelable {
         longitude = in.readDouble();
         latitude = in.readDouble();
         pressure = in.readDouble();
+        timezone = in.readInt();
         weatherItems = in.createTypedArrayList(FutureWeatherItem.CREATOR);
     }
 
@@ -70,6 +80,7 @@ public class CityItem implements Parcelable {
         dest.writeDouble(longitude);
         dest.writeDouble(latitude);
         dest.writeDouble(pressure);
+        dest.writeInt(timezone);
         dest.writeTypedList(weatherItems);
     }
 
@@ -183,4 +194,5 @@ public class CityItem implements Parcelable {
     public void setWeatherItems(ArrayList<FutureWeatherItem> weatherItems) {
         this.weatherItems = weatherItems;
     }
+
 }

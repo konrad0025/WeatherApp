@@ -14,13 +14,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextClock;
 import android.widget.TextView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link OverAllDataFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class OverAllDataFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
@@ -29,7 +25,8 @@ public class OverAllDataFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private CityItem cityItem;
     private SharedViewModel viewModel;
-    TextView textViewCityName,textViewTime,textViewLon,textViewLat,textViewTemp;
+    TextView textViewCityName,textViewLon,textViewLat,textViewTemp;
+    TextClock textClock;
     // TODO: Rename and change types of parameters
     private boolean mParam1;
     private String mParam2;
@@ -67,12 +64,13 @@ public class OverAllDataFragment extends Fragment {
                 textViewCityName = view.findViewById(R.id.cityName);
                 textViewLon = view.findViewById(R.id.longitudeValue);
                 textViewLat = view.findViewById(R.id.latitudeValue);
-                textViewTime = view.findViewById(R.id.timeValue);
+                textClock = view.findViewById(R.id.timeValue);
                 textViewTemp = view.findViewById(R.id.tempValue);
                 Log.d("Hello",mParam1+"hello");
                 textViewCityName.setText(cityItem.getCityName()+"");
                 textViewLon.setText(cityItem.getLongitude()+"");
                 textViewLat.setText(cityItem.getLatitude()+"");
+                textClock.setTimeZone("GMT+"+cityItem.getTimezone());
                 if(mParam1)
                 {
                     textViewTemp.setText(Math.round(cityItem.getTemp())+"°C");
@@ -89,12 +87,13 @@ public class OverAllDataFragment extends Fragment {
         textViewCityName = view.findViewById(R.id.cityName);
         textViewLon = view.findViewById(R.id.longitudeValue);
         textViewLat = view.findViewById(R.id.latitudeValue);
-        textViewTime = view.findViewById(R.id.timeValue);
+        textClock = view.findViewById(R.id.timeValue);
         textViewTemp = view.findViewById(R.id.tempValue);
         Log.d("Hello",mParam1+"hello");
         textViewCityName.setText(cityItem.getCityName()+"");
         textViewLon.setText(cityItem.getLongitude()+"");
         textViewLat.setText(cityItem.getLatitude()+"");
+        textClock.setTimeZone("GMT+"+cityItem.getTimezone());
         if(mParam1)
         {
             textViewTemp.setText(Math.round(cityItem.getTemp())+"°C");

@@ -89,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
         fromBottom = AnimationUtils.loadAnimation(this, R.anim.from_bottom_anim);
 
         cityItems = favCityDB.getCityList();
+
         setOnClickListner();
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
@@ -98,8 +99,8 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
 
         String prev = loadDataTime();
         if (prev.equals("")) {
-            favCityDB.insertIntoTheDatabase("Your Location",0,0,0,0,0,0,0,0,new ArrayList<FutureWeatherItem>(),true);
-            cityItems.add(0, new CityItem(0, R.drawable.cloud, "Your Location", "0",0,0,0,0,0,0,0,0,new ArrayList<FutureWeatherItem>()));
+            favCityDB.insertIntoTheDatabase("Your Location",0,0,0,0,0,0,0,0,new ArrayList<FutureWeatherItem>(),0,true);
+            cityItems.add(0, new CityItem(0, R.drawable.cloud, "Your Location", "0",0,0,0,0,0,0,0,0,new ArrayList<FutureWeatherItem>(),0));
             cityAdapter.notifyDataSetChanged();
             saveDataTime();
         } else {
@@ -237,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
                     double humidity = jsonObjectMain.getDouble("humidity");
                     double speed = jsonObjectWind.getDouble("speed");
                     double deg = jsonObjectWind.getDouble("deg");
-                    double visibility = jsonObjectZero.getDouble("visibility")/10000*100;
+                    double visibility = Math.round(jsonObjectZero.getDouble("visibility")/10000*100);
                     double pressure = jsonObjectMain.getDouble("pressure");
 
                     JSONObject jsonCity = jsonResponse.getJSONObject("city");
@@ -245,6 +246,7 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
 
                     double lon = jsonCityCoord.getDouble("lon");
                     double lat = jsonCityCoord.getDouble("lat");
+                    int timezone = jsonCity.getInt("timezone")/3600;
                     int i = 1;
                     ArrayList<FutureWeatherItem> weatherItems = new ArrayList<FutureWeatherItem>();
                     while(i<40)
@@ -261,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
                         i++;
 
                     }
-                    cityItems.add(new CityItem(cityItems.size(), R.drawable.cloud, cityName, "0", temp,speed,deg,humidity,visibility,lon,lat,pressure,weatherItems));
+                    cityItems.add(new CityItem(cityItems.size(), R.drawable.cloud, cityName, "0", temp,speed,deg,humidity,visibility,lon,lat,pressure,weatherItems,timezone));
                     cityAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -308,7 +310,7 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
                         double humidity = jsonObjectMain.getDouble("humidity");
                         double speed = jsonObjectWind.getDouble("speed");
                         double deg = jsonObjectWind.getDouble("deg");
-                        double visibility = jsonObjectZero.getDouble("visibility")/10000*100;
+                        double visibility = Math.round(jsonObjectZero.getDouble("visibility")/10000*100);
                         double pressure = jsonObjectMain.getDouble("pressure");
 
                         JSONObject jsonCity = jsonResponse.getJSONObject("city");
@@ -316,6 +318,8 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
 
                         double lon = jsonCityCoord.getDouble("lon");
                         double lat = jsonCityCoord.getDouble("lat");
+                        int timezone = jsonCity.getInt("timezone")/3600;
+                        Log.d("timezone",timezone+"");
                         int i = 1;
                         ArrayList<FutureWeatherItem> weatherItems = new ArrayList<FutureWeatherItem>();
                         while(i<40)
@@ -328,7 +332,7 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
                             jsonObjectWeather = jsonArrayWeather.getJSONObject(0);
                             String descriptionItem = jsonObjectWeather.getString("description");
                             String weatherInfoItem = jsonObjectWeather.getString("main");
-                            weatherItems.add(new FutureWeatherItem(tempItem,weatherInfoItem,descriptionItem,timeItem,0));
+                            weatherItems.add(new FutureWeatherItem(tempItem,weatherInfoItem,descriptionItem,timeItem,cityItems.get(j).getWeatherItems().get(i-1).getId()));
                             i++;
 
                         }
@@ -344,6 +348,7 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
                         Log.d("hello", cityItems.get(j).getCityName() + " " + cityItems.get(j).getTemp() + " " + j);
                         cityAdapter.notifyDataSetChanged();
                         if (cityItems.get(j).getFavStatus().equals("1")) {
+                            Log.d("Main",cityItems.get(j).getWeatherItems().get(10).getId()+"");
                             favCityDB.updateCity(cityItems.get(j));
                         }
                     } catch (JSONException e) {
@@ -420,7 +425,7 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
                                 double humidity = jsonObjectMain.getDouble("humidity");
                                 double speed = jsonObjectWind.getDouble("speed");
                                 double deg = jsonObjectWind.getDouble("deg");
-                                double visibility = jsonObjectZero.getDouble("visibility")/10000*100;
+                                double visibility = Math.round(jsonObjectZero.getDouble("visibility")/10000*100);
                                 double pressure = jsonObjectMain.getDouble("pressure");
 
                                 JSONObject jsonCity = jsonResponse.getJSONObject("city");
@@ -428,6 +433,7 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
 
                                 double lon = jsonCityCoord.getDouble("lon");
                                 double lat = jsonCityCoord.getDouble("lat");
+                                int timezone = jsonCity.getInt("timezone")/3600;
                                 int i = 1;
                                 ArrayList<FutureWeatherItem> weatherItems = new ArrayList<FutureWeatherItem>();
                                 while(i<40)
@@ -440,7 +446,14 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
                                     jsonObjectWeather = jsonArrayWeather.getJSONObject(0);
                                     String descriptionItem = jsonObjectWeather.getString("description");
                                     String weatherInfoItem = jsonObjectWeather.getString("main");
-                                    weatherItems.add(new FutureWeatherItem(tempItem,weatherInfoItem,descriptionItem,timeItem,0));
+                                    if(cityItems.get(0).getWeatherItems().size()!=0)
+                                    {
+                                        weatherItems.add(new FutureWeatherItem(tempItem,weatherInfoItem,descriptionItem,timeItem,cityItems.get(0).getWeatherItems().get(i-1).getId()));
+                                    }
+                                    else
+                                    {
+                                        weatherItems.add(new FutureWeatherItem(tempItem,weatherInfoItem,descriptionItem,timeItem,i));
+                                    }
                                     i++;
 
                                 }
