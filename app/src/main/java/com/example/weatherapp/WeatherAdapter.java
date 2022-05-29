@@ -44,6 +44,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         //holder.imageView.setImageResource(weatherItems.get(position).getWeather());
         holder.textViewDescription.setText(weatherItems.get(position).getDescription());
+        holder.imageView.setImageResource(returnImageID(weatherItems.get(position).getDescription()));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime localDateTime = LocalDateTime.parse(weatherItems.get(position).getDateTime(), formatter);
         DateFormat f = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -66,6 +67,36 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
 
     }
 
+    private int returnImageID(String weather) {
+        Log.d(weather,weather);
+        switch(weather)
+        {
+            case "clear sky":
+                return R.drawable.clear_sky_emoji;
+            case "few clouds":
+                return R.drawable.few_clouds_emoji;
+            case "scattered clouds":
+                return R.drawable.scattered_clouds_emoji;
+            case "broken clouds":
+                return R.drawable.broken_clouds_emoji;
+            case "overcast clouds":
+                return R.drawable.broken_clouds_emoji;
+            case "shower rain":
+                return R.drawable.rain_emoji;
+            case "light rain":
+                return R.drawable.shower_rain_emoji;
+            case "rain":
+                return R.drawable.rain_emoji;
+            case "thunderstorm":
+                return R.drawable.thunderstorm_emoji;
+            case "snow":
+                return R.drawable.snow_emoji;
+            case "mist":
+                return R.drawable.mist_emoji;
+        }
+        return R.drawable.mist_emoji;
+    }
+
     @Override
     public int getItemCount() {
         return weatherItems.size();
@@ -76,7 +107,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
         TextView textViewTemp,textViewTime,textViewDescription;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.imageView);
+            imageView = itemView.findViewById(R.id.image_view);
             textViewDescription = itemView.findViewById(R.id.description);
             textViewTemp = itemView.findViewById(R.id.temp);
             textViewTime = itemView.findViewById(R.id.time);

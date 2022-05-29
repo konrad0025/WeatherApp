@@ -41,14 +41,6 @@ public class CityItem implements Parcelable {
         this.timezone = timezone;
     }
 
-    public int getTimezone() {
-        return timezone;
-    }
-
-    public void setTimezone(int timezone) {
-        this.timezone = timezone;
-    }
-
     protected CityItem(Parcel in) {
         key_id = in.readInt();
         imageResource = in.readInt();
@@ -65,6 +57,7 @@ public class CityItem implements Parcelable {
         timezone = in.readInt();
         weatherItems = in.createTypedArrayList(FutureWeatherItem.CREATOR);
     }
+
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
@@ -100,6 +93,15 @@ public class CityItem implements Parcelable {
             return new CityItem[size];
         }
     };
+
+    public int getTimezone() {
+        return timezone;
+    }
+
+    public void setTimezone(int timezone) {
+        this.timezone = timezone;
+    }
+
 
     public int getKey_id() {
         return key_id;

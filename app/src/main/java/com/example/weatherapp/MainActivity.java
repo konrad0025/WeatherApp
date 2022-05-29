@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
 
         String prev = loadDataTime();
         if (prev.equals("")) {
-            favCityDB.insertIntoTheDatabase("Your Location",0,0,0,0,0,0,0,0,new ArrayList<FutureWeatherItem>(),0,true);
+            favCityDB.insertIntoTheDatabase("Your Location",0,0,0,0,0,0,0,0,new ArrayList<FutureWeatherItem>(),0,R.drawable.cloud,true);
             cityItems.add(0, new CityItem(0, R.drawable.cloud, "Your Location", "0",0,0,0,0,0,0,0,0,new ArrayList<FutureWeatherItem>(),0));
             cityAdapter.notifyDataSetChanged();
             saveDataTime();
@@ -216,70 +216,84 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
     }
 
     public void getWeatherDetailsOfNewCity(String cityName) {
-        String tempUrl = "";
-        tempUrl = url + "?q=" + cityName + "&appid=" + appId;
+        if(!cityName.equals(""))
+        {
+            String tempUrl = "";
+            tempUrl = url + "?q=" + cityName + "&appid=" + appId;
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, tempUrl, new Response.Listener<String>() {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onResponse(String response) {
-                Log.d("response", response);
-                try {
-                    JSONObject jsonResponse = new JSONObject(response);
-                    JSONArray jsonArray = jsonResponse.getJSONArray("list");
-                    JSONObject jsonObjectZero = jsonArray.getJSONObject(0);
-                    JSONArray jsonArrayWeather = jsonObjectZero.getJSONArray("weather");
-                    JSONObject jsonObjectWeather = jsonArrayWeather.getJSONObject(0);
-                    String description = jsonObjectWeather.getString("description");
-                    String time = jsonObjectZero.getString("dt_txt");
-                    JSONObject jsonObjectMain = jsonObjectZero.getJSONObject("main");
-                    JSONObject jsonObjectWind = jsonObjectZero.getJSONObject("wind");
-                    double temp = jsonObjectMain.getDouble("temp") - 273.15;
-                    double humidity = jsonObjectMain.getDouble("humidity");
-                    double speed = jsonObjectWind.getDouble("speed");
-                    double deg = jsonObjectWind.getDouble("deg");
-                    double visibility = Math.round(jsonObjectZero.getDouble("visibility")/10000*100);
-                    double pressure = jsonObjectMain.getDouble("pressure");
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, tempUrl, new Response.Listener<String>() {
+                @SuppressLint("NotifyDataSetChanged")
+                @Override
+                public void onResponse(String response) {
+                    Log.d("response", response);
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response);
+                        JSONArray jsonArray = jsonResponse.getJSONArray("list");
+                        JSONObject jsonObjectZero = jsonArray.getJSONObject(0);
+                        JSONArray jsonArrayWeather = jsonObjectZero.getJSONArray("weather");
+                        JSONObject jsonObjectWeather = jsonArrayWeather.getJSONObject(0);
+                        String description = jsonObjectWeather.getString("description");
+                        String time = jsonObjectZero.getString("dt_txt");
+                        JSONObject jsonObjectMain = jsonObjectZero.getJSONObject("main");
+                        JSONObject jsonObjectWind = jsonObjectZero.getJSONObject("wind");
+                        double temp = jsonObjectMain.getDouble("temp") - 273.15;
+                        double humidity = jsonObjectMain.getDouble("humidity");
+                        double speed = jsonObjectWind.getDouble("speed");
+                        double deg = jsonObjectWind.getDouble("deg");
+                        double visibility = Math.round(jsonObjectZero.getDouble("visibility")/10000*100);
+                        double pressure = jsonObjectMain.getDouble("pressure");
 
-                    JSONObject jsonCity = jsonResponse.getJSONObject("city");
-                    JSONObject jsonCityCoord = jsonCity.getJSONObject("coord");
+                        JSONObject jsonCity = jsonResponse.getJSONObject("city");
+                        JSONObject jsonCityCoord = jsonCity.getJSONObject("coord");
 
-                    double lon = jsonCityCoord.getDouble("lon");
-                    double lat = jsonCityCoord.getDouble("lat");
-                    int timezone = jsonCity.getInt("timezone")/3600;
-                    int i = 1;
-                    ArrayList<FutureWeatherItem> weatherItems = new ArrayList<FutureWeatherItem>();
-                    while(i<40)
-                    {
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-                        String timeItem = jsonObject.getString("dt_txt");
-                        jsonObjectMain = jsonObject.getJSONObject("main");
-                        Double tempItem = jsonObjectMain.getDouble("temp") - 273.15;
-                        jsonObjectWeather = jsonArrayWeather.getJSONObject(0);
-                        jsonArrayWeather = jsonObject.getJSONArray("weather");
-                        String descriptionItem = jsonObjectWeather.getString("description");
-                        String weatherInfoItem = jsonObjectWeather.getString("main");
-                        weatherItems.add(new FutureWeatherItem(tempItem,weatherInfoItem,descriptionItem,timeItem,0));
-                        i++;
+                        double lon = jsonCityCoord.getDouble("lon");
+                        double lat = jsonCityCoord.getDouble("lat");
+                        int timezone = jsonCity.getInt("timezone")/3600;
+                        int i = 1;
+                        ArrayList<FutureWeatherItem> weatherItems = new ArrayList<FutureWeatherItem>();
+                        while(i<40)
+                        {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            String timeItem = jsonObject.getString("dt_txt");
+                            jsonObjectMain = jsonObject.getJSONObject("main");
+                            Double tempItem = jsonObjectMain.getDouble("temp") - 273.15;
+                            jsonObjectWeather = jsonArrayWeather.getJSONObject(0);
+                            jsonArrayWeather = jsonObject.getJSONArray("weather");
+                            String descriptionItem = jsonObjectWeather.getString("description");
+                            String weatherInfoItem = jsonObjectWeather.getString("main");
+                            weatherItems.add(new FutureWeatherItem(tempItem,weatherInfoItem,descriptionItem,timeItem,0));
+                            i++;
 
+                        }
+                        cityItems.add(new CityItem(cityItems.size(), returnPhotoId(description), cityName, "0", temp,speed,deg,humidity,visibility,lon,lat,pressure,weatherItems,timezone));
+                        cityAdapter.notifyDataSetChanged();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    cityItems.add(new CityItem(cityItems.size(), R.drawable.cloud, cityName, "0", temp,speed,deg,humidity,visibility,lon,lat,pressure,weatherItems,timezone));
-                    cityAdapter.notifyDataSetChanged();
-                } catch (JSONException e) {
-                    e.printStackTrace();
+
                 }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    if(error.toString().contains("NoConnectionError"))
+                    {
+                        Toast.makeText(getApplicationContext(), "No Internet connection", Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(), "Wrong data", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+            RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+            requestQueue.add(stringRequest);
 
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.toString().trim(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-        requestQueue.add(stringRequest);
-
-        saveDataTime();
+            saveDataTime();
+        }
+        else
+        {
+            Toast.makeText(getApplicationContext(), "Empty input", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -345,13 +359,14 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
                         cityItems.get(j).setLongitude(lon);
                         cityItems.get(j).setPressure(pressure);
                         cityItems.get(j).setWeatherItems(weatherItems);
+                        cityItems.get(j).setImageResource(returnPhotoId(description));
                         Log.d("hello", cityItems.get(j).getCityName() + " " + cityItems.get(j).getTemp() + " " + j);
                         cityAdapter.notifyDataSetChanged();
                         if (cityItems.get(j).getFavStatus().equals("1")) {
-                            Log.d("Main",cityItems.get(j).getWeatherItems().get(10).getId()+"");
                             favCityDB.updateCity(cityItems.get(j));
                         }
                     } catch (JSONException e) {
+                        Log.d("check", e.toString());
                         e.printStackTrace();
                     }
 
@@ -359,7 +374,14 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(getApplicationContext(), error.toString().trim(), Toast.LENGTH_SHORT).show();
+                    if(error.toString().contains("NoConnectionError"))
+                    {
+                        Toast.makeText(getApplicationContext(), "No Internet connection", Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
             RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
@@ -466,6 +488,7 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
                                 cityItems.get(0).setLongitude(lon);
                                 cityItems.get(0).setPressure(pressure);
                                 cityItems.get(0).setWeatherItems(weatherItems);
+                                cityItems.get(0).setImageResource(returnPhotoId(description));
                                 cityAdapter.notifyDataSetChanged();
                                 favCityDB.updateCity(cityItems.get(0));
                                 Toast.makeText(MainActivity.this, "Data refreshed successfully", Toast.LENGTH_SHORT).show();
@@ -477,7 +500,15 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(getApplicationContext(), error.toString().trim(), Toast.LENGTH_SHORT).show();
+                            if(error.toString().contains("NoConnectionError"))
+                            {
+                                Toast.makeText(getApplicationContext(), "No Internet connection", Toast.LENGTH_SHORT).show();
+                            }
+                            else
+                            {
+                                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_SHORT).show();
+                            }
+
                         }
                     });
                     RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
@@ -491,5 +522,36 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         getLocation();
+    }
+
+    public static int returnPhotoId(String description)
+    {
+        switch(description)
+        {
+            case "clear sky":
+                return R.drawable.sun;
+            case "few clouds":
+                return R.drawable.partlycouldy;
+            case "scattered clouds":
+                return R.drawable.cloud;
+            case "broken clouds":
+                return R.drawable.mostcloud;
+            case "shower rain":
+                return R.drawable.rain;
+            case "rain":
+                return R.drawable.rain;
+            case "thunderstorm":
+                return R.drawable.thunder;
+            case "snow":
+                return R.drawable.snow;
+            case "mist":
+                return R.drawable.fog;
+            case "overcast clouds":
+                return R.drawable.mostcloud;
+            case "light rain":
+                return R.drawable.rain;
+
+        }
+        return R.drawable.cloud;
     }
 }

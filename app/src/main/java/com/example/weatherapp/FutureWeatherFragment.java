@@ -62,8 +62,6 @@ public class FutureWeatherFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        //Log.d("checlasdas",this.cityItem.getWeatherItems().get(0).getWeather()+"sprawdzam tylko");
-        Log.d("hello",mParam1+"");
         weatherAdapter = new WeatherAdapter(this.cityItem.getWeatherItems(), this.getContext(), mParam1);
         recyclerView.setAdapter(weatherAdapter);
         viewModel.getCity().observe(requireActivity(), new Observer<CityItem>() {

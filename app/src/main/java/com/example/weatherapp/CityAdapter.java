@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -120,7 +119,6 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
         TextView cityName,tempValue;
         Button favButton;
         FragmentManager f = fragmentManager;
-        ConstraintLayout constraintLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -128,7 +126,6 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
             cityName = itemView.findViewById(R.id.titleTextView);
             favButton = itemView.findViewById(R.id.favoriteButton);
             tempValue = itemView.findViewById(R.id.temp_value);
-            //constraintLayout = itemView.findViewById(R.id.frameLayout);
             itemView.setOnClickListener(this);
             favButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -139,7 +136,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
                     if(cityItem.getFavStatus().equals("0"))
                     {
                         cityItem.setFavStatus("1");
-                        cityItem.setKey_id(favCityDB.insertIntoTheDatabase(cityItem.getCityName(),cityItem.getTemp(), cityItem.getWindSpeed(), cityItem.getWindDeg(), cityItem.getHumidity(),cityItem.getVisibility(),cityItem.getLongitude(),cityItem.getLatitude(), cityItem.getPressure(),cityItem.getWeatherItems(), cityItem.getTimezone(),false));
+                        cityItem.setKey_id(favCityDB.insertIntoTheDatabase(cityItem.getCityName(),cityItem.getTemp(), cityItem.getWindSpeed(), cityItem.getWindDeg(), cityItem.getHumidity(),cityItem.getVisibility(),cityItem.getLongitude(),cityItem.getLatitude(), cityItem.getPressure(),cityItem.getWeatherItems(), cityItem.getTimezone(),cityItem.getImageResource(),false));
                         favButton.setBackgroundResource(R.drawable.ic_baseline_yellow_24);
                     }
                     else {
