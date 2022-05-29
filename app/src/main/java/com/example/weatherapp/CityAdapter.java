@@ -128,7 +128,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
             cityName = itemView.findViewById(R.id.titleTextView);
             favButton = itemView.findViewById(R.id.favoriteButton);
             tempValue = itemView.findViewById(R.id.temp_value);
-            constraintLayout = itemView.findViewById(R.id.frameLayout);
+            //constraintLayout = itemView.findViewById(R.id.frameLayout);
             itemView.setOnClickListener(this);
             favButton.setOnClickListener(new View.OnClickListener() {
                 @Override

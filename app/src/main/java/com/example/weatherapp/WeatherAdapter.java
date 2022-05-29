@@ -23,10 +23,12 @@ import java.util.Date;
 public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHolder> {
     ArrayList<FutureWeatherItem> weatherItems;
     Context context;
+    boolean isCelcius;
 
-    public WeatherAdapter(ArrayList<FutureWeatherItem> weatherItems, Context context) {
+    public WeatherAdapter(ArrayList<FutureWeatherItem> weatherItems, Context context, boolean isCelcius) {
         this.weatherItems = weatherItems;
         this.context = context;
+        this.isCelcius = isCelcius;
     }
 
     @NonNull
@@ -48,12 +50,20 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
         try {
             Date d = f.parse(weatherItems.get(position).getDateTime());
             DateFormat date = new SimpleDateFormat("yyyy-MM-dd");
-            DateFormat time = new SimpleDateFormat("hh:mm");
+            DateFormat time = new SimpleDateFormat("hh:mm a");
             holder.textViewTime.setText(date.format(d).toString()+"\n"+time.format(d).toString());
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        holder.textViewTemp.setText(Math.round(weatherItems.get(position).getTemp())+"°C");
+        if(isCelcius)
+        {
+            holder.textViewTemp.setText(Math.round(weatherItems.get(position).getTemp())+"°C");
+        }
+        else
+        {
+            holder.textViewTemp.setText(Math.round(weatherItems.get(position).getTemp()*9/5+32)+"°F");
+        }
+
     }
 
     @Override
