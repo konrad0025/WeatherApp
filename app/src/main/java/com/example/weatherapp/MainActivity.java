@@ -233,6 +233,7 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
                         JSONArray jsonArrayWeather = jsonObjectZero.getJSONArray("weather");
                         JSONObject jsonObjectWeather = jsonArrayWeather.getJSONObject(0);
                         String description = jsonObjectWeather.getString("description");
+
                         String time = jsonObjectZero.getString("dt_txt");
                         JSONObject jsonObjectMain = jsonObjectZero.getJSONObject("main");
                         JSONObject jsonObjectWind = jsonObjectZero.getJSONObject("wind");
@@ -360,13 +361,11 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
                         cityItems.get(j).setPressure(pressure);
                         cityItems.get(j).setWeatherItems(weatherItems);
                         cityItems.get(j).setImageResource(returnPhotoId(description));
-                        Log.d("hello", cityItems.get(j).getCityName() + " " + cityItems.get(j).getTemp() + " " + j);
                         cityAdapter.notifyDataSetChanged();
                         if (cityItems.get(j).getFavStatus().equals("1")) {
                             favCityDB.updateCity(cityItems.get(j));
                         }
                     } catch (JSONException e) {
-                        Log.d("check", e.toString());
                         e.printStackTrace();
                     }
 
@@ -418,7 +417,6 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
 
     @SuppressLint("MissingPermission")
     public void getLocation() {
-        Log.d("response", "response=waiting");
         fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
             @Override
             public void onComplete(@NonNull Task<Location> task) {
@@ -550,8 +548,12 @@ public class MainActivity extends AppCompatActivity implements AddNewCityDialog.
                 return R.drawable.mostcloud;
             case "light rain":
                 return R.drawable.rain;
+            case "moderate rain":
+                return R.drawable.rain;
+            case "Clouds":
+                return R.drawable.cloud;
 
         }
-        return R.drawable.cloud;
+        return R.drawable.fog;
     }
 }

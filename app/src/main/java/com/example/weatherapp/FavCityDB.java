@@ -76,7 +76,6 @@ public class FavCityDB extends SQLiteOpenHelper {
         }
 
         long id = db.insert(TABLE_NAME,null,cv);
-        Log.d("FavCityDB Status", cityName + ", status - " + cv);
         if(isFisrtUse)
         {
             ArrayList<FutureWeatherItem> list2 = new ArrayList<>();
@@ -90,7 +89,6 @@ public class FavCityDB extends SQLiteOpenHelper {
         {
             list.forEach((x)->{
                 x.setId(insertIntoTheDatabaseItem(x.getWeather(),x.getTemp(),x.getDescription(),x.getDateTime(),(int)id));
-                Log.d("Show ID",x.getId()+"");
             });
         }
         return (int)id;
@@ -108,7 +106,6 @@ public class FavCityDB extends SQLiteOpenHelper {
 
 
         long idReturn = db.insert(TABLE_NAME_2,null,cv);
-        Log.d("FavCityDB2 Status", weatherName + " " + temp + ", status - " + cv+" tutaj patrz "+idReturn);
         return (int)idReturn;
     }
 
@@ -211,12 +208,10 @@ public class FavCityDB extends SQLiteOpenHelper {
         cv.put(PRESSURE, cityItem.getPressure());
         cv.put(TIMEZONE,cityItem.getTimezone());
         cv.put(DESCRIPTION,cityItem.getImageResource());
-        Log.d("Hello",cityItem.getCityName()+" to tutaj "+cityItem.getKey_id());
         cityItem.getWeatherItems().forEach((x)->{
             updateCityItem(x);
         });
         db.update(TABLE_NAME, cv, "id = ?", new String[]{cityItem.getKey_id()+""});
-        Log.d("FavCityDB Status", cityItem.getCityName() + ", status - " + cv);
     }
 
     public void updateCityItem(FutureWeatherItem futureWeatherItem)
@@ -227,7 +222,6 @@ public class FavCityDB extends SQLiteOpenHelper {
         cv.put(DETAILS_INFO, futureWeatherItem.getDescription());
         cv.put(DATE_TIME, futureWeatherItem.getDateTime());
         cv.put(TEMP_C, futureWeatherItem.getTemp());
-        Log.d("Hello",futureWeatherItem.getDateTime()+" to tutaj "+futureWeatherItem.getId());
         db.update(TABLE_NAME_2, cv, "id = ?", new String[]{futureWeatherItem.getId()+""});
     }
 

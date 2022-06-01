@@ -18,15 +18,13 @@ import android.widget.TextView;
 
 public class WindFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private CityItem cityItem;
     private SharedViewModel viewModel;
     TextView textViewSpeedValue,textViewDegValue,textViewHuminity,textViewVisibility;
 
-    // TODO: Rename and change types of parameters
     private int mParam1;
     private String mParam2;
 
@@ -68,7 +66,6 @@ public class WindFragment extends Fragment {
                 textViewDegValue = view.findViewById(R.id.degrees);
                 textViewHuminity = view.findViewById(R.id.humidityValue);
                 textViewVisibility = view.findViewById(R.id.visibilityValue);
-                Log.d("Hello",mParam1+"hello");
                 textViewSpeedValue.setText(cityItem.getWindSpeed()+"");
                 textViewDegValue.setText(cityItem.getWindDeg()+"");
                 textViewHuminity.setText(cityItem.getHumidity()+"");

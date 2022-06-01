@@ -19,20 +19,17 @@ import android.widget.LinearLayout;
 
 public class FutureWeatherFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "temp";
     private static final String ARG_PARAM2 = "param2";
     private CityItem cityItem;
     private WeatherAdapter weatherAdapter;
     private SharedViewModel viewModel;
     private RecyclerView recyclerView;
-    // TODO: Rename and change types of parameters
+
     private boolean mParam1;
     private String mParam2;
     View view;
     public FutureWeatherFragment() {
-        // Required empty public constructor
     }
 
 
@@ -49,7 +46,6 @@ public class FutureWeatherFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_future_weather, container, false);
         return view;
     }

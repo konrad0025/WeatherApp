@@ -68,7 +68,6 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
     }
 
     private int returnImageID(String weather) {
-        Log.d(weather,weather);
         switch(weather)
         {
             case "clear sky":
@@ -93,6 +92,10 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
                 return R.drawable.snow_emoji;
             case "mist":
                 return R.drawable.mist_emoji;
+            case "moderate rain":
+                return R.drawable.rain_emoji;
+            case "Clouds":
+                return R.drawable.scattered_clouds_emoji;
         }
         return R.drawable.mist_emoji;
     }

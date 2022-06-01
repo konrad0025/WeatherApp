@@ -45,12 +45,6 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
     @Override
     public CityAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         favCityDB = new FavCityDB(context);
-        /*SharedPreferences prefs = context.getSharedPreferences("prefs",Context.MODE_PRIVATE);
-        boolean firstStart = prefs.getBoolean("firstStart",true);
-        if(firstStart)
-        {
-            createTableOnFirstStart();
-        }*/
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item,parent,false);
 
         return new ViewHolder(view);
@@ -60,7 +54,6 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull CityAdapter.ViewHolder holder, int position) {
         final CityItem cityItem = cityItems.get(position);
 
-        //readCursorData(cityItem,holder);
         holder.imageView.setImageResource(cityItem.getImageResource());
         holder.cityName.setText(cityItem.getCityName());
         holder.tempValue.setText(getTempeture(cityItem.getTemp()));
@@ -80,30 +73,6 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
     }
 
     private void readCursorData(CityItem cityItem, ViewHolder viewHolder) {
-        /*Cursor cursor = favCityDB.readAllData(cityItem.getKey_id());
-        SQLiteDatabase db = favCityDB.getReadableDatabase();
-        try{
-            while(cursor.moveToNext())
-            {
-                String itemFavStatus = cursor.getString(cursor.getColumnIndex("fStatus"));
-                cityItem.setFavStatus(itemFavStatus);
-
-                if(itemFavStatus != null && itemFavStatus.equals("1")){
-                    viewHolder.favButton.setBackgroundResource(R.drawable.ic_baseline_yellow_24);
-                }
-                else if( itemFavStatus != null && itemFavStatus.equals("0"))
-                {
-                    viewHolder.favButton.setBackgroundResource(R.drawable.ic_baseline_shadow_24);
-                }
-            }
-        } finally {
-            if (cursor != null && cursor.isClosed())
-            {
-                cursor.close();
-            }
-            db.close();
-        }*/
-
     }
 
 

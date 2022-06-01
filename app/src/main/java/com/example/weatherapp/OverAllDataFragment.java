@@ -19,20 +19,17 @@ import android.widget.TextView;
 
 public class OverAllDataFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "temp";
     private static final String ARG_PARAM2 = "param2";
     private CityItem cityItem;
     private SharedViewModel viewModel;
     TextView textViewCityName,textViewLon,textViewLat,textViewTemp;
     TextClock textClock;
-    // TODO: Rename and change types of parameters
+
     private boolean mParam1;
     private String mParam2;
     View view;
     public OverAllDataFragment() {
-        // Required empty public constructor
     }
 
 
@@ -48,7 +45,6 @@ public class OverAllDataFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_over_all_data, container, false);
         return view;
     }
@@ -66,7 +62,6 @@ public class OverAllDataFragment extends Fragment {
                 textViewLat = view.findViewById(R.id.latitudeValue);
                 textClock = view.findViewById(R.id.timeValue);
                 textViewTemp = view.findViewById(R.id.tempValue);
-                Log.d("Hello",mParam1+"hello");
                 textViewCityName.setText(cityItem.getCityName()+"");
                 textViewLon.setText(cityItem.getLongitude()+"");
                 textViewLat.setText(cityItem.getLatitude()+"");
@@ -89,7 +84,6 @@ public class OverAllDataFragment extends Fragment {
         textViewLat = view.findViewById(R.id.latitudeValue);
         textClock = view.findViewById(R.id.timeValue);
         textViewTemp = view.findViewById(R.id.tempValue);
-        Log.d("Hello",mParam1+"hello");
         textViewCityName.setText(cityItem.getCityName()+"");
         textViewLon.setText(cityItem.getLongitude()+"");
         textViewLat.setText(cityItem.getLatitude()+"");
